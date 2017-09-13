@@ -1,52 +1,221 @@
 {
-  "master_settings" : {
-    "prices" : {
-      "Hanoi" : {
-        "currency" : "$",
-        "vehicles" : {
-          "car" : {
-            "enable" : true,
-            "icon" : "sedan",
-            "name" : "Car",
-            "price" : 0.3
-          },
-          "suv" : {
-            "enable" : true,
-            "icon" : "suv",
-            "name" : "SUV",
-            "price" : 0.4
-          },
-          "taxi" : {
-            "enable" : true,
-            "icon" : "taxi",
-            "name" : "Taxi",
-            "price" : 0.5
-          }
-        }
-      },
-      "default" : {
-        "currency" : "$",
-        "vehicles" : {
-          "car" : {
-            "enable" : true,
-            "icon" : "sedan",
-            "name" : "Car",
-            "price" : 0.2
-          },
-          "suv" : {
-            "enable" : true,
-            "icon" : "suv",
-            "name" : "SUV",
-            "price" : 0.2
-          },
-          "taxi" : {
-            "enable" : true,
-            "icon" : "taxi",
-            "name" : "Taxi",
-            "price" : 0.4
-          }
-        }
-      }
-    }
-  }
+	"drivers": {
+		"TNcy7vKHzYfo3vTxUTVdfMPnfCz2": {
+			"email": "f2014768@pilani.bits-pilani.ac.in",
+			"name": "f2014768@pilani.bits-pilani.ac.in",
+			"phoneNumber": "",
+			"plate": "",
+			"model": "",
+			"photoURL": "https://lh4.googleusercontent.com/-viosf0boVn0/AAAAAAAAAAI/AAAAAAAAglc/TmKal1XLbSU/photo.jpg",
+			"aop": "",
+			"history": [
+				"TNcy7vKHzYfo3vTxUTVdfMPnfCz2"
+			]
+		}
+	},
+	"journey": {
+		"TNcy7vKHzYfoasTxUTVdfMPnfCz2": {
+			"total_fare": "",
+			"first_mile": {
+				"TNcy7vKHzsdo3vTxUTVdfMPnfCz2": {
+					"expected_fare": "",
+					"actual_fare": "",
+					"pickup": {
+						"name": "",
+						"label": "",
+						"position": {
+							"x_cord": 5765986.97868,
+							"y_cord": 3363546.87876
+						}
+					},
+					"drop": {
+						"name": "",
+						"label": "",
+						"position": {
+							"x_cord": 5765986.97868,
+							"y_cord": 3363546.87876
+						}
+					},
+					"driver": {
+						"id": "TNcy7vKHzYfo3vTxUTVdfMPnfCz2",
+						"status": "",
+						"position": {
+							"x_cord": 5765986.97868,
+							"y_cord": 3363546.87876
+						}
+					},
+					"passengers": [
+						"TNcy7vKHzYfo3vTxUTVdfMPnfCz2"
+					],
+					"status": ""
+				}
+			},
+			"transit": {
+				"status": "",
+				"pickup": {
+					"name": "",
+					"position": {
+						"x_cord": 5765986.97868,
+						"y_cord": 3363546.87876
+					}
+				},
+				"drop": {
+					"name": "",
+					"position": {
+						"x_cord": 5765986.97868,
+						"y_cord": 3363546.87876
+					}
+				},
+				"passenger": "TNcy7vKHzYfo3vTxUTVzvMPnfCz2",
+				"expected_boarding_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"expected_deboarding_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"metro_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"arrival_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"boarded_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"deboarded_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"departed_time": {
+					"text": "3:34pm",
+					"value": 1447187646
+				},
+				"route": {
+					"distance": {
+						"text": "7.7 mi",
+						"value": 12402
+					},
+					"duration": {
+						"text": "14 mins",
+						"value": 846
+					},
+					"end_location": {
+						"lat": 40.817908,
+						"lng": -74.065663
+					},
+					"html_instructions": "Bus towards 161 Paterson",
+					"polyline": {
+						"points": "ifwwFdirbM ...points truncated in this example"
+					},
+					"start_location": {
+						"lat": 40.756367,
+						"lng": -73.990753
+					},
+					"transit_details": {
+						"arrival_stop": {
+							"location": {
+								"lat": 40.817908,
+								"lng": -74.065663
+							},
+							"name": "Washington Ave at Paterson Plank Rd"
+						},
+						"arrival_time": {
+							"text": "3:34pm",
+							"time_zone": "America/New_York",
+							"value": 1447187646
+						},
+						"departure_stop": {
+							"location": {
+								"lat": 40.756367,
+								"lng": -73.990753
+							},
+							"name": "Port Authority Bus Terminal"
+						},
+						"departure_time": {
+							"text": "3:20pm",
+							"time_zone": "America/New_York",
+							"value": 1447186800
+						},
+						"headsign": "161 Paterson",
+						"line": {
+							"agencies": [{
+								"name": "NJ TRANSIT BUS",
+								"url": "http://www.njtransit.com/"
+							}],
+							"short_name": "161",
+							"vehicle": {
+								"icon": "//maps.gstatic.com/mapfiles/transit/iw2/6/bus.png",
+								"name": "Bus",
+								"type": "BUS"
+							}
+						},
+						"num_stops": 1
+					},
+					"travel_mode": "TRANSIT"
+				}
+
+			},
+			"last_mile": {
+				"TNcy7vKHzsdo3vTxUTVdfMPnfCz2": {
+					"expected_fare": "",
+					"actual_fare": "",
+					"pickup": {
+						"name": "",
+						"label": "",
+						"position": {
+							"x_cord": 5765986.97868,
+							"y_cord": 3363546.87876
+						}
+					},
+					"drop": {
+						"name": "",
+						"label": "",
+						"position": {
+							"x_cord": 5765986.97868,
+							"y_cord": 3363546.87876
+						}
+					},
+					"driver": {
+						"id": "TNcy7vKHzYfo3vTxUTVdfMPnfCz2",
+						"status": "",
+						"position": {
+							"x_cord": 5765986.97868,
+							"y_cord": 3363546.87876
+						}
+					},
+					"passengers": [
+						"TNcy7vKHzYfo3vTxUTVdfMPnfCz2"
+					],
+					"status": ""
+				}
+			}
+		}
+	},
+	"passengers": {
+		"TNcy7vKHzYfo3vTxUTVzvMPnfCz2": {
+			"email": "f2014768@pilani.bits-pilani.ac.in",
+			"name": "f2014768@pilani.bits-pilani.ac.in",
+			"phoneNumber": "",
+			"photoURL": "https://lh4.googleusercontent.com/-viosf0boVn0/AAAAAAAAAAI/AAAAAAAAglc/TmKal1XLbSU/photo.jpg",
+			"history": [
+				"TNcy7vKHzYfoasTxUTVdfMPnfCz2"
+			],
+			"favourite_places": {
+				"label": {
+					"name": "",
+					"position": {
+						"x_cord": 5765986.97868,
+						"y_cord": 3363546.87876
+					},
+					"vicinity": ""
+				}
+			}
+
+		}
+	}
 }
