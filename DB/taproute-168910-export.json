@@ -1,0 +1,88 @@
+{
+  "drivers" : {
+    "REPORT" : {
+      "last_month" : 10,
+      "last_year" : 0,
+      "this_month" : 15,
+      "this_week" : 15,
+      "this_year" : 25,
+      "today" : 5
+    }
+  },
+  "master_settings" : {
+    "prices" : {
+      "Hanoi" : {
+        "currency" : "$",
+        "vehicles" : {
+          "car" : {
+            "enable" : true,
+            "icon" : "sedan",
+            "name" : "Car",
+            "price" : 0.3
+          },
+          "suv" : {
+            "enable" : true,
+            "icon" : "suv",
+            "name" : "SUV",
+            "price" : 0.4
+          },
+          "taxi" : {
+            "enable" : true,
+            "icon" : "taxi",
+            "name" : "Taxi",
+            "price" : 0.5
+          }
+        }
+      },
+      "default" : {
+        "currency" : "$",
+        "vehicles" : {
+          "car" : {
+            "enable" : true,
+            "icon" : "sedan",
+            "name" : "Car",
+            "price" : 0.2
+          },
+          "suv" : {
+            "enable" : true,
+            "icon" : "suv",
+            "name" : "SUV",
+            "price" : 0.2
+          },
+          "taxi" : {
+            "enable" : true,
+            "icon" : "taxi",
+            "name" : "Taxi",
+            "price" : 0.4
+          }
+        }
+      }
+    }
+  },
+  "passengers" : {
+    "TNcy7vKHzYfo3vTxUTVzvMPnfCz2" : {
+      "email" : "f2014768@pilani.bits-pilani.ac.in",
+      "name" : "f2014768@pilani.bits-pilani.ac.in",
+      "phoneNumber" : "",
+      "photoURL" : "https://lh4.googleusercontent.com/-viosf0boVn0/AAAAAAAAAAI/AAAAAAAAglc/TmKal1XLbSU/photo.jpg"
+    },
+    "eSSSmJPNjmQinzxpfEvjFaGX4Fh2" : {
+      "email" : "neethumariyajoy@gmail.com",
+      "name" : "neethumariyajoy@gmail.com",
+      "phoneNumber" : "",
+      "photoURL" : "https://lh6.googleusercontent.com/-Bw2J_zJlsiY/AAAAAAAAAAI/AAAAAAAAAEM/u0SQfFW3_RQ/photo.jpg"
+    },
+    "k5BiwK2SnKSZGGQ0sxqaxX2rhz62" : {
+      "email" : "kmak@gmail.com",
+      "name" : "asa",
+      "phoneNumber" : "",
+      "photoURL" : "https://freeiconshop.com/wp-content/uploads/edd/person-outline-filled.png"
+    },
+    "lQ7frX2DRUbTjMI3B3uE0jigX2n2" : {
+      "email" : "user@gmail.com",
+      "name" : "User",
+      "phoneNumber" : "",
+      "photoURL" : "https://freeiconshop.com/wp-content/uploads/edd/person-outline-filled.png"
+    }
+  }
+}
