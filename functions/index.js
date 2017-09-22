@@ -4,6 +4,9 @@ const admin = require('firebase-admin');
 const TRIP_STATUS_GOING = 'going';
 const TRIP_STATUS_FINISHED = 'finished';
 
+const baseUrl = 'https://maps.googleapis.com/maps/api/';
+const apiKey = 'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk';
+
 // init app
 admin.initializeApp(functions.config().firebase);
 
@@ -86,3 +89,23 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
     });
   }
 });
+
+ // get direction between to points
+exports.getDirection = functions.database.ref('/journey/{journeyId}').onWrite(function (event) {
+  // Exit when the data is deleted.
+  if (!event.data.exists()) {
+    return;
+  }
+
+  // Grab the current value of what was written to the Realtime Database
+  const lat1 = event.data.first_mile_origin.val();
+  const lon1 = event.data.first_mile_destination.val();
+  const lat2 = event.data.first_mile_origin.val();
+  const lon2 = event.data.last_mile_destination.val();
+
+  let url = this.baseUrl + 'directions/json?'
+        + 'origin=' + lat1 + ',' + lon1
+        + '&destination=' + lat2 + ',' + lon2;
+
+    return this.http.get(url).map(res => res.json());
+  }

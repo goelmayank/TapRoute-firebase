@@ -1,4 +1,7 @@
 {
+	"base_fare" : {
+		"bangalore" : "25"
+	},
 	"events": {
 		"TNcy7vKHzYfoasTxUTVdfMPnfCz2": {
 			"driver_id": "",
