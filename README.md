@@ -22,3 +22,15 @@ Deploy your changes
 ```
 firebase deploy --only functions
 ```
+
+To use this feature, firebase-tools must have minimum version 3.8.0, and firebase-functions SDK must have minimum version 0.5.7. To update both, run the following commands in the functions/ directory for your project:
+
+```
+npm install --save firebase-functions@latest
+npm install -g firebase-tools
+```
+To run functions locally, use firebase serve:
+```
+firebase serve --only functions # to only emulate functions
+firebase serve --only functions,hosting # to emulate both functions and hosting
+```

@@ -5,6 +5,33 @@ var dist = require("./getDistance");
 // init app
 admin.initializeApp(functions.config().firebase);
 
+//push notification
+exports.sendMessageNotification = functions.database.ref('conversations/{conversationID}/messages/{messageID}').onWrite(event => {
+  if (event.data.previous.exists()) {
+    return;
+  }
+
+firebase.database().ref('messages').child(event.params.messageID).once('value').then(function(snap) {
+    var messageData = snap.val();
+
+var topic = 'notifications_' + messageData.receiverKey;
+    var payload = {
+      notification: {
+        title: "You got a new Message",
+        body: messageData.content,
+      }
+    };
+    
+    admin.messaging().sendToTopic(topic, payload)
+        .then(function(response) {
+          console.log("Successfully sent message:", response);
+        })
+        .catch(function(error) {
+          console.log("Error sending message:", error);
+        });
+  });
+});
+
 // calculate driver's rating
 exports.calculateRating = functions.database.ref('/trips/{tripId}').onWrite(function (event) {
 	// Exit when the data is deleted.
