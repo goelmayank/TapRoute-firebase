@@ -1,0 +1,107 @@
+{
+	"base_fare": {
+		"bangalore": "25"
+	},
+	"events": {
+		"TNcy7vKHzYfoasTxUTVdfMPnfCz2": {
+			"driver_id": "",
+			"passenger_id": "",
+			"location_id": "",
+			"event-category": 115,
+			"timestamp": 9595655654,
+			"comments": ""
+		}
+	},
+	"drivers": {
+		"TNcy7vKHzYfo3vTxUTVdfMPnfCz2": {
+			"email": "f2014768@pilani.bits-pilani.ac.in",
+			"name": "f2014768@pilani.bits-pilani.ac.in",
+			"phoneNumber": "",
+			"plate": "",
+			"model": "",
+			"photoURL": "https://lh4.googleusercontent.com/-viosf0boVn0/AAAAAAAAAAI/AAAAAAAAglc/TmKal1XLbSU/photo.jpg",
+			"aop": "",
+			"history": [
+				"TNcy7vKHzsdo3vTxUTVdfMPnfCz2"
+			],
+			"REPORT": {
+				"TNcy7vKHzYfo3jfxUTVdfMPnfCz2": {
+					"last_month": 10,
+					"last_year": 0,
+					"this_month": 15,
+					"this_week": 15,
+					"this_year": 25,
+					"today": 5
+				}
+			}
+		}
+	},
+	"users": {
+		"TNcy7vKHzYfo3vTxUTVzvMPnfCz2": {
+			"email": "f2014768@pilani.bits-pilani.ac.in",
+			"name": "f2014768@pilani.bits-pilani.ac.in",
+			"phoneNumber": "",
+			"photoURL": "https://lh4.googleusercontent.com/-viosf0boVn0/AAAAAAAAAAI/AAAAAAAAglc/TmKal1XLbSU/photo.jpg",
+			"history": [
+				"ajsdhihsfhsdkjhfjkshfhsdhfjs"
+			]
+		}
+	},
+	"trips": {
+		"TNcy7vKHzsdo3vTxUTVdfMPnfCz2": {
+			"name": "first mile",
+			"origin": "",
+			"destination": "",
+			"expected_time": "",
+			"total_time": "",
+			"expected_fare": "",
+			"fare": "",
+			"driver_id": "",
+			"passenger_id": ""
+		},
+		"TNcy7vKHzsdo3vTxUpodfMPnfCz2": {
+			"name": "last mile",
+			"origin": "",
+			"destination": "",
+			"expected_time": "",
+			"total_time": "",
+			"expected_fare": "",
+			"fare": "",
+			"driver_id": "",
+			"passenger_id": ""
+		}
+	},
+	"journey": {
+		"ajsdhihsfhsdkjhfjkshfhsdhfjs": {
+			"expected_fare": "",
+			"actual_fare": "",
+			"status": "",
+			"first_mile_id": "TNcy7vKHzsdo3vTxUTVdfMPnfCz2",
+			"last_mile_id": "",
+			"transit": {
+				"origin": "",
+				"destination": "",
+				"metro_time": "",
+				"arrival_time": "",
+				"expected_boarding_time": "",
+				"boarded_time": "",
+				"expected_deboarding_time": "",
+				"deboarded_time": "",
+				"expected_departing_time": "",
+				"departed_time": "",
+				"expected_fare": "",
+				"fare": "",
+				"metro_id": "",
+				"passenger_id": ""
+			}
+		}
+	},
+	"location": {
+		"TNcy7vKHzsdo3vTxUTVdfMPnfCz2": {
+			"name": "",
+			"label": "",
+			"x_cord": 5765986.97868,
+			"y_cord": 3363546.87876
+		}
+	}
+}

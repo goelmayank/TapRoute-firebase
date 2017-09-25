@@ -35,6 +35,26 @@
       ".read": "auth != null",
       ".write": "auth != null",
     },
+    "location": {
+      ".read": true,
+      ".write": "auth != null",
+    },
+    "events": {
+      ".read": true,
+      ".write": "auth != null",
+    },
+    "journey": {
+      ".read": true,
+      ".write": "auth != null",
+    },
+    "metro": {
+      ".read": true,
+      ".write": "auth != null",
+    },
+    "base_fare": {
+      ".read": true,
+      ".write": "auth != null",
+    },
     "$other": {
       ".read": "auth != null",
       ".write": false
