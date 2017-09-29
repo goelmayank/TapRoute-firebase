@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-var dist = require("./getDistance");
+var dist = require("./getDistance"),
+    require = require("require");
+
 
 // init app
 admin.initializeApp(functions.config().firebase);
@@ -21,7 +23,7 @@ var topic = 'notifications_' + messageData.receiverKey;
         body: messageData.content,
       }
     };
-    
+
     admin.messaging().sendToTopic(topic, payload)
         .then(function(response) {
           console.log("Successfully sent message:", response);
@@ -38,6 +40,16 @@ exports.calculateRating = functions.database.ref('/trips/{tripId}').onWrite(func
 	if (!event.data.exists()) {
 		return;
 	}
+
+  // Make external request
+  exports.sendExternalRequest = functions.database.ref('/journey')
+      .onWrite(function(event) {
+        request('https://taproute-python.herokuapp.com/readData', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log('Success');
+        }
+      });
+    }
 
 	// Grab the current value of what was written to the Realtime Database
 	const original = event.data.val();
@@ -119,4 +131,4 @@ data.destination="33.71468443,73.06603432";
 dist.getDistanceBetweenTwoPoints(data,function(err,success) {
     console.log(err);
     console.log(success);
-});	
+});
