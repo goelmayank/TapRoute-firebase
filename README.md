@@ -1,9 +1,9 @@
 # TapRoute-firebase
 functions hosted on firebase
 
-Import the file DB/rules.json to Firebase rules. This file contains DB security rules to protect your DB.
+Import the file database.rules.json to Firebase rules. This file contains DB security rules to protect your DB.
 
-Import master data from DB/sample_data.json to Firebase DB
+Import master data from DB/data.json to Firebase DB
 
 ### Setup firebase functions
 [Cloud Functions](https://firebase.google.com/docs/functions/) for Firebase lets you automatically run backend code in response to events triggered by Firebase features and HTTPS requests. Your code is stored in Google’s cloud and runs in a managed environment. There's no need to manage and scale your own servers.
@@ -20,7 +20,7 @@ firebase login
 
 Deploy your changes
 ```
-firebase deploy --only functions
+firebase deploy 
 ```
 
 To use this feature, firebase-tools must have minimum version 3.8.0, and firebase-functions SDK must have minimum version 0.5.7. To update both, run the following commands in the functions/ directory for your project:
