@@ -68,6 +68,59 @@ admin.initializeApp(functions.config().firebase);
 });
 });
 
+/**
+ * Triggers when a user approaches a metro station.
+ *
+ * Name of approaching metro station saved as destination_station_approaching : <Station Name> when geolocation service called at second last station.
+ */
+ exports.sendFollowerNotification = functions.database.ref('/trips/{tripID}/destination_station_approaching/{stationName}').onWrite(event => {
+ 	const tripID = event.params.tripID;
+ 	const stationName = event.params.stationName;
+  // If un-follow we exit the function.
+
+  // Get the list of device notification tokens.
+  const getDeviceTokensPromise = admin.database().ref(`/users/${tripID}/notificationTokens`).once('value');
+
+  return Promise.all([getDeviceTokensPromise]).then(results => {
+  	const tokensSnapshot = results[0];
+
+    // Check if there are any device tokens.
+    if (!tokensSnapshot.hasChildren()) {
+    	return console.log('There are no notification tokens to send to.');
+    }
+    console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
+
+    // Notification details.
+    const payload = {
+    	notification: {
+    		title: 'Destination approaching!',
+    		body: `You are about to reach your destination, ${stationName}`,
+    	}
+    };
+
+    // Listing all tokens.
+    const tokens = Object.keys(tokensSnapshot.val());
+
+    // Send notifications to all tokens.
+    return admin.messaging().sendToDevice(tokens, payload).then(response => {
+      // For each message check if there was an error.
+      const tokensToRemove = [];
+      response.results.forEach((result, index) => {
+      	const error = result.error;
+      	if (error) {
+      		console.error('Failure sending notification to', tokens[index], error);
+          // Cleanup the tokens who are not registered anymore.
+          if (error.code === 'messaging/invalid-registration-token' ||
+          	error.code === 'messaging/registration-token-not-registered') {
+          	tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
+      }
+  }
+});
+      return Promise.all(tokensToRemove);
+  });
+});
+});
+
 //push notification
 exports.sendMessageNotification = functions.database.ref('conversations/{conversationID}/messages/{messageID}').onWrite(event => {
 	if (event.data.previous.exists()) {
