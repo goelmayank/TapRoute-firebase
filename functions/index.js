@@ -182,6 +182,12 @@ dist.getDistanceBetweenTwoPoints(data,function(err,success) {
 	console.log(success);
 });
 
+console.log('finding journey...')
+require("./findJourney").fullRide({origin: '12.9913, 77.6521', destination: '12.9719, 77.6412'}, function(res){
+	console.log('**********find_journey************\n', res)
+});
+
+
 // Moments library to format dates.
 const moment = require('moment');
 // CORS Express middleware to enable CORS Requests.
