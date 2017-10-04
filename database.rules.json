@@ -14,11 +14,11 @@
     },
     "localities": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "master_settings": {
       ".read": true,
-      ".write": false,
+      ".write": false
     },
     "users": {
       ".read": true,
@@ -37,31 +37,31 @@
     },
     "transactions": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "trips": {
       ".read": "auth != null",
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "location": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "events": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "journey": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "metro": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "base_fare": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "$other": {
       ".read": "auth != null",
