@@ -21,6 +21,10 @@ firebase login
 Deploy your changes
 ```
 firebase deploy 
+
+or if you are working with functions only
+
+firebase deploy --only functions
 ```
 
 To use this feature, firebase-tools must have minimum version 3.8.0, and firebase-functions SDK must have minimum version 0.5.7. To update both, run the following commands in the functions/ directory for your project:

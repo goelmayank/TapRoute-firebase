@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Transmitter</title>
+	<script src="../lib/sonicnet.js"></script>
+</head>
+<body>
+	<h1>Transmitter</h1>
+	<div class="row">
+		<ul id="details">
+
+		</ul>
+	</div>
+	<script>
+		var audioContext = new window.AudioContext() || new webkitAudioContext();
+		var ALPHABET = '01';
+		var socketOptions = {alphabet: ALPHABET, charDuration: 0.2};
+		
+		var ans = prompt('answer "y" for audible range');
+		if(ans == 'y'){
+			socketOptions.freqMin = 10500; socketOptions.freqMax= 15000;
+			
+		}
+
+		
+		var timer = setInterval(function(){
+			transmit('0')
+		}, 1000);
+
+		function transmit(string) {
+		  var d = document.createElement('li');
+
+		  d.innerText = "sending message ";
+		  details.appendChild(d);
+		  ssocket = new SonicSocket(socketOptions);
+
+		  ssocket.send(string);
+		}
+		
+	</script>
+</body>
+</html>
