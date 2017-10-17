@@ -2,13 +2,17 @@
 <html>
 <head>
 	<title>Transmitter</title>
-	<script src="../../lib/sonicnet.js"></script>
+	<link rel="stylesheet" href="../assets/css/basic.css" type="text/css">
+	<script src="../lib/sonicnet.js"></script>
 </head>
 <body>
 	<h1>Transmitter</h1>
 	<div class="row">
 		<div id="button">Send PIN</div>
-		<div id="wallet">1000</div>
+		<div>
+			Money Left: 
+			<div id="wallet">1000</div>
+		</div>
 	</div>
 	<div class="row">
 		<ul id="details">
@@ -20,7 +24,7 @@
 		wallet.innerText = mon;
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
 		var ALPHABET = '0123456789';
-		var socketOptions = {alphabet: ALPHABET, charDuration: .2, freqMin: 20500, freqMax: 21500 };
+		var socketOptions = {alphabet: ALPHABET, charDuration: .2 };
 		
 		var ans = ""; //prompt('answer "y" for audible range');
 		if(ans == 'y'){
@@ -32,9 +36,9 @@
 		var pin = ("0000" + createPin()).slice(-4);
 		var transmit_timer;
 		function startInterval(){
-			transmit_timer = setInterval(function(){			
+			transmit_timer = setInterval(function(){	
 				transmit(pin);
-			}, 3000);
+			}, 7000);
 		}
 		function stopInterval(){
 			clearInterval(transmit_timer);
@@ -49,39 +53,56 @@
 				return;
 			}
 			
+			
 			button.innerText = "Sending PIN"
+			transmit(pin);
 			startInterval();
 			running = true;
-			reciveResponse();
+			
 
 		});
+		
 		function transmit(string) {
-		  console.log(string)
-		  var d = document.createElement('li');
+			console.log(string)
+			var d = document.createElement('li');
 
-		  d.innerText = "sending message ";
-		  details.appendChild(d);
-		  ssocket = new SonicSocket(socketOptions);
+			d.innerText = "sending message ";
+			details.appendChild(d);
+			ssocket = new SonicSocket(socketOptions);
 
-		  ssocket.send(string);
+			ssocket.send(string);
 		}
 
 		function createPin(){
-			return Math.floor(Math.random()*9999);
+
+			// return Math.floor(Math.random()*9999);
+			// var array = ['0', '1','2', '3', '4', '5', '6', '7', '8', '9'];
+			return '2345';
 		}
-		function reciveResponse(){
-			var sserver = new SonicServer({alphabet:'_', freqMin: 21900, freqMax: 22000});
-			sserver.on('message', function(message) {
-				console.log(message);
-				if(message == "_"){
-					button.innerText = "Send PIN"
-					stopInterval();
-					running = false;
-					return;
-				}
-			});
-			sserver.start();	
-		}
+		// var sserver;
+		
+		sserver = new SonicServer({
+			alphabet: '0123456789'
+			
+		});
+
+		sserver.on('message', function(message) {
+			console.log('sserver ', message);
+			if(message == "67"){
+				button.innerText = "Send PIN"
+				stopInterval();
+				running = false;
+				return;
+			}
+		});
+
+		sserver.start();
+		function debugMode(){
+			sserver.setDebug(true);
+			// sserver.debugDraw_();
+		}	
+		// setTimeout(debugMode, 2000);
+		
 	</script>
 </body>
 </html>

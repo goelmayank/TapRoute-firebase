@@ -2,13 +2,14 @@
 <html>
 <head>
 	<title>Reciever Metro Origin</title>
-	<script src="../../../../lib/sonicnet.js"></script>
+	<link rel="stylesheet" href="../../../assets/css/basic.css" type="text/css">
+	<script src="../../../lib/sonicnet.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-firestore.js"></script>
 	<script src="../../../assets/js/firestore.js"></script>
 </head>
 <body>
-	<h1>Reciever Trunstile Indiranagar</h1>
+	<h1>Reciever Turnstile Indiranagar</h1>
 	<div class="row">
 		<ul id="details">
 
@@ -19,7 +20,7 @@
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
 		var ALPHABET = '0123456789';
 		
-		var serverOPtions = {alphabet: ALPHABET, freqMin: 20500, freqMax: 21500};
+		var serverOPtions = {alphabet: ALPHABET};
 		var ans = ""; // prompt('answer "y" for audible range')
 		if(ans == 'y'){
 			
@@ -46,16 +47,22 @@
 		  console.log('received', message);
 		});
 		sserver.start();
-		function debugMode(){
-			sserver.setDebug(true);
-			sserver.debugDraw_();
-		}	
+		console.log(sserver);
+		// function debugMode(){
+		// 	sserver.setDebug(true);
+		// 	sserver.debugDraw_();
+		// }	
 		// setTimeout(debugMode, 2000);
+		// freqMin: 20000, freqMax: 21000
 		function sendResponse(){
-			console.log('sending response');
-			var ssocket = new SonicSocket({alphabet: '_', freqMin: 21900, freqMax: 22000, charDuration: .2});
+			
+			var ssocket = new SonicSocket({alphabet: '0123456789',
+			 charDuration: .2});
 
-		  	console.log(ssocket.send('_'));
+		  	setTimeout(function(){
+		  		console.log('sending response');
+		  		ssocket.send('67');
+		  	}, 2500);
 		}
 	</script>
 </body>

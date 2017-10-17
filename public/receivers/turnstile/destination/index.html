@@ -2,37 +2,66 @@
 <html>
 <head>
 	<title>Reciever Metro Destination</title>
-	<script src="../../../../lib/sonicnet.js"></script>
+	<link rel="stylesheet" href="../../../assets/css/basic.css" type="text/css">
+	<script src="../../../lib/sonicnet.js"></script>
+	<script src="../../../assets/js/firestore.js"></script>
 </head>
 <body>
-	<h1>Reciever Trunstile Baiyapanahalli</h1>
+	<h1>Reciever Turnstile Baiyapanahalli</h1>
 	<div class="row">
 		<ul id="details">
 
 		</ul>
 	</div>
+	
 	<script>
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
-		var ALPHABET = '01';
+		var ALPHABET = '0123456789';
 		
 		var serverOPtions = {alphabet: ALPHABET};
-		var ans = prompt('answer "y" for audible range')
+		var ans = ""; // prompt('answer "y" for audible range')
 		if(ans == 'y'){
 			
 			serverOPtions.freqMin = 10000; serverOPtions.freqMax= 15000;
 		}
+		var received = false;
 		sserver = new SonicServer(serverOPtions);
 		sserver.on('message', function(message) {
-		  
+		  if(message.length != 4){
+		  	return;
+		  }
+		  if(received){
+		  	sendResponse();
+		  	return;
+		  }
+		  received = true;
 		  var d = document.createElement('li');
-
-		  d.innerText = "Recived.";
+		  sendResponse();
+		  save(message,"metroStations");
+		  d.innerText = "Welcome to Baiyapanahalli Station";
 		  details.appendChild(d);
 
 		  // document.body.style.backgroundColor = '#' + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 );
-		  console.log('recived', message);
+		  console.log('received', message);
 		});
 		sserver.start();
+		console.log(sserver);
+		// function debugMode(){
+		// 	sserver.setDebug(true);
+		// 	sserver.debugDraw_();
+		// }	
+		// setTimeout(debugMode, 2000);
+		// freqMin: 20000, freqMax: 21000
+		function sendResponse(){
+			
+			var ssocket = new SonicSocket({alphabet: '0123456789',
+			 charDuration: .2});
+
+		  	setTimeout(function(){
+		  		console.log('sending response');
+		  		ssocket.send('67');
+		  	}, 2500);
+		}
 	</script>
 </body>
 </html>
