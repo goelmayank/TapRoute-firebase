@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reciever Metro Origin</title>
+	<script src="../../../../lib/sonicnet.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-firestore.js"></script>
+	<script src="../../../assets/js/firestore.js"></script>
+</head>
+<body>
+	<h1>Reciever Trunstile Indiranagar</h1>
+	<div class="row">
+		<ul id="details">
+
+		</ul>
+	</div>
+	
+	<script>
+		var audioContext = new window.AudioContext() || new webkitAudioContext();
+		var ALPHABET = '0123456789';
+		
+		var serverOPtions = {alphabet: ALPHABET, freqMin: 20500, freqMax: 21500};
+		var ans = ""; // prompt('answer "y" for audible range')
+		if(ans == 'y'){
+			
+			serverOPtions.freqMin = 10000; serverOPtions.freqMax= 15000;
+		}
+		var received = false;
+		sserver = new SonicServer(serverOPtions);
+		sserver.on('message', function(message) {
+		  if(message.length != 4){
+		  	return;
+		  }
+		  if(received){
+		  	sendResponse();
+		  	return;
+		  }
+		  received = true;
+		  var d = document.createElement('li');
+		  sendResponse();
+		  save(message,"metroStations");
+		  d.innerText = "Welcome to Indiranagar Station";
+		  details.appendChild(d);
+
+		  // document.body.style.backgroundColor = '#' + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 );
+		  console.log('received', message);
+		});
+		sserver.start();
+		function debugMode(){
+			sserver.setDebug(true);
+			sserver.debugDraw_();
+		}	
+		// setTimeout(debugMode, 2000);
+		function sendResponse(){
+			console.log('sending response');
+			var ssocket = new SonicSocket({alphabet: '_', freqMin: 21900, freqMax: 22000, charDuration: .2});
+
+		  	console.log(ssocket.send('_'));
+		}
+	</script>
+</body>
+</html>
