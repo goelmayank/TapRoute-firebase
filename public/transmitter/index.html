@@ -33,14 +33,15 @@
 		var mon = 1000;
 		wallet.innerText = mon;
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
-		var ALPHABET = '0123456789';
-		var socketOptions = {alphabet: ALPHABET, charDuration: .2 };
+		// var ALPHABET = '0123456789';
+		var socketOptions = { charDuration: .2 };
 		
 		var ans = ""; //prompt('answer "y" for audible range');
 		if(ans == 'y'){
 			socketOptions.freqMin = 10500; socketOptions.freqMax= 15000;
 			
 		}
+		var wallets = {};
 
 		var running = false;
 		var pin = ("0000" + createPin()).slice(-4);
@@ -80,6 +81,11 @@
 		
 		function transmit(string) {
 			console.log(string)
+			if((wallets[string]) == undefined ||(wallets[string]) == NaN){
+				console.log('set wallet')
+				wallets[string] = 1000;
+			}
+			wallet.innerText = wallets[string];
 			var d = document.createElement('li');
 
 			d.innerText = "sending message ";
@@ -97,14 +103,16 @@
 		}
 		// var sserver;
 		
-		sserver = new SonicServer({
-			alphabet: '0123456789'
-			
-		});
+		sserver = new SonicServer({});
 
 		sserver.on('message', function(message) {
 			console.log('sserver ', message);
-			if(message == "67"){
+			if(message.charAt(0) == "@"){
+				console.log(message);
+				var money = parseInt(message.substring(1));
+				var money_left = parseInt(wallet.innerText) - money;
+				wallets[get_pin.value] = money_left;
+				wallet.innerText = money_left;
 				button.innerText = "Send PIN"
 				stopInterval();
 				running = false;

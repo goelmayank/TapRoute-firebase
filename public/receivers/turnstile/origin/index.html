@@ -9,7 +9,45 @@
 	<script src="../../../assets/js/firestore.js"></script>
 </head>
 <body>
-	<h1>Reciever Turnstile Indiranagar</h1>
+	<h1>Reciever Turnstile </h1>
+	<div class="row">
+		<label>Choose one</label>
+		<select id="mode" single>
+			<option>Origin</option>
+			<option>Destination</option>
+		</select>
+	</div>
+	<div class = "row">
+		<div class="input-field" >
+			<select id ="metro" single>
+				
+				<option value="0" >Mysore Road</option>
+				<option value="1">Deepanjali Nagar</option>
+				<option value="2">Attiguppe</option>
+				<option value="3">Vijaynagar</option>
+				<option value="4">Hosahalli</option>
+				<option value="5">Magadi Road</option>
+				<option value="6">City Railway Station</option>
+				<option value="7">Majestic</option>
+				<option value="8">Sir M.V. Station</option>
+				<option value="9">Vidhana Soudha</option>
+				<option value="10">Cubbon Park</option>
+				<option value="11">M. G. Road</option>
+				<option value="12">Trinity</option>
+				<option value="13">Halasur</option>
+				<option value="14" selected>IndiraNagar</option>
+				<option value="15">SV Road</option>
+				<option value="16">Byappanahalli</option>
+			</select>
+			<!--<label>Pickup Location</label>-->
+		</div>
+
+		
+	</div>
+	<div class="row">
+		Fare:<br>
+		<div id="fare">0</div>
+	</div>
 	<div class="row">
 		<ul id="details">
 
@@ -18,14 +56,15 @@
 	
 	<script>
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
-		var ALPHABET = '0123456789';
+		// var ALPHABET = '0123456789';
 		var last_char = "";
-		var serverOPtions = {alphabet: ALPHABET};
+		var serverOPtions = {};
 		var ans = ""; // prompt('answer "y" for audible range')
 		if(ans == 'y'){
 			
 			serverOPtions.freqMin = 10000; serverOPtions.freqMax= 15000;
 		}
+		var fare = 0;
 		var received = false;
 		sserver = new SonicServer(serverOPtions);
 		sserver.on('message', function(message) {
@@ -34,21 +73,56 @@
 		  }
 		  if(received && message == last_char){
 
-		  	sendResponse();
+		  	sendResponse('@' + fare);
 		  	return;
 		  }
 		  last_char = message;
+			console.log('received', message);
+		  
+		  var origin_id = -1;
+	
+			  if(mode.value == "Origin"){
+			  		fare = 0;
+				  set(message, {
+				  	 "origin" : metro.value,
+				  	 "timeStamp_origin": new Date().getTime()
+				  }, "metroStations");
+				  confirmMode(message);
+				  return;
+			  }
+			  else{
+			  	return getOrigin(message,"metroStations" ).then((i)=>{
+			  		  console.log('i', i);
+			  	  	  origin_id = parseInt(i);
+			  	  	  console.log('origin_id' , origin_id);
+				  	  if(origin_id == -1 || origin_id == NaN ){ console.log('choose origin'); return;}
+				  	  fare = 10*Math.abs(parseInt(metro.value) - origin_id);
+				  	  console.log('fare', fare)
+				  	  document.getElementById('fare').innerText = fare;
+				  	  
+				  	  set(message, {
+					  	 "destination" : metro.value,
+					  	 "timeStamp_destination": new Date().getTime()
+					  }, "metroStations");
+					  confirmMode(message);
 
-		  received = true;
-		  var d = document.createElement('li');
-		  sendResponse();
-		  save(message,"metroStations");
-		  d.innerText = "Welcome to Indiranagar Station (Recieved "+ message + " )";
-		  details.appendChild(d);
+				});
 
-		  // document.body.style.backgroundColor = '#' + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 );
-		  console.log('received', message);
+			  }
+			  
+
+			  // document.body.style.backgroundColor = '#' + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 ) + Math.floor(Math.random(0,1)* 9 );
+			  
+		  
 		});
+		function confirmMode(message){
+			received = true;
+			  var d = document.createElement('li');
+			  sendResponse('@' + fare);
+			  console.log(mode.value == "Origin");	
+			  d.innerText = "Welcome (Recieved "+ message + " )";
+			  details.appendChild(d);
+		}
 		sserver.start();
 		console.log(sserver);
 		// function debugMode(){
@@ -57,14 +131,14 @@
 		// }	
 		// setTimeout(debugMode, 2000);
 		// freqMin: 20000, freqMax: 21000
-		function sendResponse(){
+		function sendResponse(msg){
 			
-			var ssocket = new SonicSocket({alphabet: '0123456789',
+			var ssocket = new SonicSocket({
 			 charDuration: .2});
 
 		  	setTimeout(function(){
-		  		console.log('sending response');
-		  		ssocket.send('67');
+		  		console.log('sending response', msg);
+		  		ssocket.send(msg);
 		  	}, 2500);
 		}
 	</script>
