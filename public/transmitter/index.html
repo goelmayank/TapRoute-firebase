@@ -33,8 +33,8 @@
 		var mon = 1000;
 		wallet.innerText = mon;
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
-		// var ALPHABET = '0123456789';
-		var socketOptions = { charDuration: .2 };
+		var ALPHABET = '0123456789@A';
+		var socketOptions = { alphabet: ALPHABET,  charDuration: .2 };
 		
 		var ans = ""; //prompt('answer "y" for audible range');
 		if(ans == 'y'){
@@ -103,7 +103,7 @@
 		}
 		// var sserver;
 		
-		sserver = new SonicServer({});
+		sserver = new SonicServer({alphabet: ALPHABET});
 
 		sserver.on('message', function(message) {
 			console.log('sserver ', message);
