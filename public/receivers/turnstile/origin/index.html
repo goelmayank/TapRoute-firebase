@@ -57,7 +57,6 @@
 	<script>
 		var audioContext = new window.AudioContext() || new webkitAudioContext();
 		var ALPHABET = '0123456789@A';
-		
 		var last_char = "";
 		var serverOPtions = {alphabet: ALPHABET};
 		var ans = ""; // prompt('answer "y" for audible range')
@@ -72,7 +71,6 @@
 		  if(message.length != 4){
 		  	return;
 		  }
-		  console.log('reciving pin', new Date().getTime());
 		  if(received && message == last_char){
 
 		  	sendResponse('@' + fare);
@@ -139,10 +137,10 @@
 			 alphabet: ALPHABET,
 			 charDuration: .2});
 
-		  	
-		  	console.log('sending response', msg , new Date().getTime());
-		  	ssocket.send(msg);
-		  	
+		  	setTimeout(function(){
+		  		console.log('sending response', msg);
+		  		ssocket.send(msg);
+		  	}, 2500);
 		}
 	</script>
 </body>
