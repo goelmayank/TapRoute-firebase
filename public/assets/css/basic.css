@@ -4,7 +4,7 @@
 	font: 20px/24px arial, verdana;
 }
 
-.wrapper{
+body, .wrapper{
 	display: flex;
 	flex-direction: column;
 	/*justify-content: space-around;*/
@@ -15,7 +15,7 @@
 	background: #eaeaea;
 	text-align: center;
 }
-.wrapper > *{
+body> *, .wrapper > *{
 	margin: 50px;
 	transition: all 1s linear;
 }

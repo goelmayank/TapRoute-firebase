@@ -32,13 +32,13 @@
 	</div>
 	
 	</section>
-	<section class="logger">
+	<!-- <section class="logger">
 		<div class="row">
 			<div id="log_info">
 				
 			</div>
 		</div>
-	</section>
+	</section> -->
 	<script>
 		var mon = 1000;
 		var info = "";
@@ -62,10 +62,10 @@
 			transmit_timer = setInterval(function(){
 				pin = getPin();	
 				transmit(pin);
-			}, 3000);
+			}, 2000);
 		}
 		function getPin(){
-			log('pin value: ' + get_pin.value);
+			console.log('pin value: ' + get_pin.value);
 			return get_pin.value
 		}
 		function stopInterval(){
@@ -94,7 +94,7 @@
 		function transmit(string) {
 			
 			if((wallets[string]) == undefined ||(wallets[string]) == NaN){
-				log('set wallet');
+				console.log('set wallet');
 				wallets[string] = 1000;
 			}
 			wallet.innerText = wallets[string];
@@ -103,52 +103,14 @@
 			d.innerText = "sending message @" + (new Date()).toString().split(" ")[4];
 			details.appendChild(d);
 			ssocket = new SonicSocket(socketOptions);
-			log('sending string: ' + string);
+			console.log('sending string: ' + string);
 			ssocket.send(string);
 		}
 
 		function createPin(){
-
-			// return Math.floor(Math.random()*9999);
-			// var array = ['0', '1','2', '3', '4', '5', '6', '7', '8', '9'];
 			return '2345';
 		}
-		// var sserver;
 		
-		sserver = new SonicServer({alphabet: ALPHABET});
-
-		sserver.on('message', function(message) {
-			log('sserver detected ' +  message);
-			if(message.charAt(0) == "@"){
-				log('sserver accepted ' +  message);
-				var money = parseInt(message.substring(1));
-				var money_left = parseInt(wallet.innerText) - money;
-				wallets[get_pin.value] = money_left;
-				wallet.innerText = money_left;
-				button.innerText = "Send PIN"
-				stopInterval();
-				running = false;
-				return;
-			}
-		});
-
-		sserver.start();
-		function debugMode(){
-			sserver.setDebug(true);
-			// sserver.debugDraw_();
-		}	
-		setTimeout(debugMode, 2000);
-		function log(message){
-			info +='@'+ (new Date).toString().split(" ")[4]  + ' '+ message +'\n';
-		}
-
-		var logger = setInterval(function(){
-			log_info.innerText = info;
-		}, 500)
-
-		// console.log = function(m){
-		// 	log(m);
-		// }
 	</script>
 </body>
 </html>

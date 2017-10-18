@@ -73,7 +73,7 @@
 		  }
 		  if(received && message == last_char){
 
-		  	sendResponse('@' + fare);
+		  	// sendResponse('@' + fare);
 		  	return;
 		  }
 		  last_char = message;
@@ -118,7 +118,7 @@
 		function confirmMode(message){
 			received = true;
 			  var d = document.createElement('li');
-			  sendResponse('@' + fare);
+			  // sendResponse('@' + fare);
 			  console.log(mode.value == "Origin");	
 			  d.innerText = "Welcome (Recieved "+ message + " )";
 			  details.appendChild(d);
@@ -131,17 +131,17 @@
 		// }	
 		// setTimeout(debugMode, 2000);
 		// freqMin: 20000, freqMax: 21000
-		function sendResponse(msg){
+		// function sendResponse(msg){
 			
-			var ssocket = new SonicSocket({
-			 alphabet: ALPHABET,
-			 charDuration: .2});
+		// 	var ssocket = new SonicSocket({
+		// 	 alphabet: ALPHABET,
+		// 	 charDuration: .2});
 
-		  	// setTimeout(function(){
-		  		console.log('sending response', msg);
-		  		ssocket.send(msg);
-		  	// }, 2500);
-		}
+		//   	// setTimeout(function(){
+		//   		console.log('sending response', msg);
+		//   		ssocket.send(msg);
+		//   	// }, 2500);
+		// }
 	</script>
 </body>
 </html>
