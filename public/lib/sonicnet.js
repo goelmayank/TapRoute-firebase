@@ -365,7 +365,10 @@ SonicServer.prototype.debugDraw_ = function() {
   canvas.width = document.body.offsetWidth;
   canvas.height = 480;
   drawContext = canvas.getContext('2d');
+  drawContext.fillStyle = 'white';
+  drawContext.fillRect(0,0, canvas.width, canvas.height);
   // Plot the frequency data.
+  
   for (var i = 0; i < this.freqs.length; i++) {
     var value = this.freqs[i];
     // Transform this value (in db?) into something that can be plotted.
