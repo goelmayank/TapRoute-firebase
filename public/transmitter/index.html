@@ -8,6 +8,16 @@
 <body>
 	<h1>Transmitter</h1>
 	<div class="row">
+		<label>Select pin</label><br>
+		<select single id="get_pin">
+			<option>2345</option>
+			<option>2354</option>
+			<option>3254</option>
+			<option>8524</option>
+			<option>4258</option>
+		</select>
+	</div>
+	<div class="row">
 		<div id="button">Send PIN</div>
 		<div>
 			Money Left: 
@@ -36,9 +46,14 @@
 		var pin = ("0000" + createPin()).slice(-4);
 		var transmit_timer;
 		function startInterval(){
-			transmit_timer = setInterval(function(){	
+			transmit_timer = setInterval(function(){
+				pin = getPin();	
 				transmit(pin);
 			}, 7000);
+		}
+		function getPin(){
+			console.log(get_pin.value);
+			return get_pin.value
 		}
 		function stopInterval(){
 			clearInterval(transmit_timer);
@@ -55,6 +70,7 @@
 			
 			
 			button.innerText = "Sending PIN"
+			pin = getPin();	
 			transmit(pin);
 			startInterval();
 			running = true;
