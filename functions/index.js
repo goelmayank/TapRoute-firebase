@@ -165,12 +165,14 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 });
 
 // Make external request
-exports.sendExternalRequest = functions.database.ref('/journey').onWrite(function(event) {
-	request('https://taproute-python.herokuapp.com/readData', function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			console.log('Success');
-		}
+exports.sendExternalRequest = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
+	console.log(event.data)
+	require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
+	.then(data => {
+		console.log(data);
 	});
+	// require("./detectIfMetro").detectIfMetro(place_id,);
+
 });
 
 var dist = require("./getDistance");
@@ -185,81 +187,4 @@ dist.getDistanceBetweenTwoPoints(data,function(err,success) {
 console.log('finding journey...')
 require("./findJourney").fullRide({origin: '12.9913, 77.6521', destination: '12.9719, 77.6412'}, function(res){
 	console.log('**********find_journey************\n', res)
-});
-
-
-// Moments library to format dates.
-const moment = require('moment');
-// CORS Express middleware to enable CORS Requests.
-const cors = require('cors')({origin: true});
-// [END additionalimports]
-
-// [START all]
-/**
- * Returns the server's date. You must provide a `format` URL query parameter or `format` vaue in
- * the request body with which we'll try to format the date.
- *
- * Format must follow the Node moment library. See: http://momentjs.com/
- *
- * Example format: "MMMM Do YYYY, h:mm:ss a".
- * Example request using URL query parameters:
- *   https://us-central1-<project-id>.cloudfunctions.net/date?format=MMMM%20Do%20YYYY%2C%20h%3Amm%3Ass%20a
- * Example request using request body with cURL:
- *   curl -H 'Content-Type: application/json' /
- *        -d '{"format": "MMMM Do YYYY, h:mm:ss a"}' /
- *        https://us-central1-<project-id>.cloudfunctions.net/date
- *
- * This endpoint supports CORS.
- */
-// [START trigger]
-exports.date = functions.https.onRequest((req, res) => {
-// [END trigger]
-  // [START sendError]
-  // Forbidding PUT requests.
-  if (req.method === 'PUT') {
-    res.status(403).send('Forbidden!');
-  }
-  // [END sendError]
-
-  // [START usingMiddleware]
-  // Enable CORS using the `cors` express middleware.
-  cors(req, res, () => {
-  // [END usingMiddleware]
-    // Reading date format from URL query parameter.
-    // [START readQueryParam]
-    let format = req.query.format;
-    // [END readQueryParam]
-    // Reading date format from request body query parameter
-    if (!format) {
-      // [START readBodyParam]
-      format = req.body.format;
-      // [END readBodyParam]
-    }
-    // [START sendResponse]
-    const formattedDate = moment().format(format);
-    console.log('Sending Formatted date:', formattedDate);
-    res.status(200).send(formattedDate);
-    // [END sendResponse]
-  });
-});
-// [END all]
-
-exports.bigben = functions.https.onRequest((req, res) => {
-  const hours = (new Date().getHours() % 12) + 1; // london is UTC + 1hr;
-  // [START_EXCLUDE silent]
-  // [START cachecontrol]
-  res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
-  // [END cachecontrol]
-  // [START vary]
-  res.set('Vary', 'Accept-Encoding, X-My-Custom-Header');
-  // [END vary]
-  // [END_EXCLUDE]
-  res.status(200).send(`<!doctype html>
-    <head>
-      <title>Time</title>
-    </head>
-    <body>
-      ${'BONG '.repeat(hours)}
-    </body>
-  </html>`);
 });

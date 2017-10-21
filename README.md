@@ -20,10 +20,6 @@ firebase login
 
 Deploy your changes
 ```
-firebase deploy 
-
-or if you are working with functions only
-
 firebase deploy --only functions
 ```
 
