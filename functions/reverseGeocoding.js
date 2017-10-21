@@ -2,9 +2,9 @@ var gMapsClient = require('@google/maps').createClient({
   key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 });
 
-exports.reverseGeocoding = function (lat, lng, callback){
+exports.handler = (even, callback)=>{
   gMapsClient.reverseGeocode({
-    latlng:[lat, lng]
+    latlng:[event.data.lat, event.data.lng]
   },
     (err, response) =>{
       if(!err && response.status==200){

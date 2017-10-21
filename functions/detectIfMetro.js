@@ -4,11 +4,11 @@ var gMapsClient = require('@google/maps').createClient(
   key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 });
 
-exports.detectIfMetro = function (lat, lng, callback){
+exports.handler = (event, callback)=>{
   gMapsClient.places({
       location:{
-        latitude: lat,
-        longitude: lng
+        latitude: event.data.lat,
+        longitude: event.data.lng
       },
       type: "subway_station"
     }, (err, response) =>{

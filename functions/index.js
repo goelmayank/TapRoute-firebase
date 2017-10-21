@@ -164,16 +164,23 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 	}
 });
 
-// Make external request
-exports.sendExternalRequest = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
-	console.log(event.data)
-	require("./detectIfMetro").detectIfMetro(event.data.lat, event.data.lng)
-	.then(data => {
-		console.log(data);
-	});
-	// require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
 
-});
+const detectIfMetroModule = require("./detectIfMetro")
+const reverseGeocodingModule = require("./reverseGeocoding")
+exports.detectIfMetroModule = functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler);
+// functions.database.ref('/gps_feed/users/{userId}').onWrite(reverseGeocodingModule.handler);
+
+
+// Make external request
+// exports.sendExternalRequest = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
+// 	console.log(event.data)
+// 	require("./detectIfMetro").detectIfMetro(event.data.lat, event.data.lng)
+// 	.then(data => {
+// 		console.log(data);
+// 	});
+// 	// require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
+
+// });
 
 var dist = require("./getDistance");
 var data = {};
