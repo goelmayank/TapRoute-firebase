@@ -10,7 +10,7 @@ exports.detectIfMetro = function (lat, lng, callback){
         longitude: lng
       },
       type: "subway_station"
-    });
+    }), (err, response) =>{
     if(!err && response.status==200){
       console.log(response.json.results)
       return response.json.results
