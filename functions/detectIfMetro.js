@@ -1,5 +1,6 @@
 var request = require("request");
-var gMapsClient = require(@google/maps).createClient({
+var gMapsClient = require('@google/maps').createClient(
+  {
   key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 });
 
