@@ -5,6 +5,7 @@ var gMapsClient = require('@google/maps').createClient(
 });
 
 exports.handler = (event, callback)=>{
+  console.log(event.data);
   gMapsClient.places({
       location:{
         latitude: event.data.lat,
