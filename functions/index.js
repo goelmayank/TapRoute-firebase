@@ -165,8 +165,10 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 });
 
 exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
-	require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
+	admin.database().ref('log/321/').set(event.data.val());
+	require("./reverseGeocoding").reverseGeocoding(event.data.val().lat, event.data.val().lng)
 	.then(data => {
+		console.log(data);
 		admin.database().ref('log/123/').set(data);
 	});
 	// require("./detectIfMetro").detectIfMetro(place_id);

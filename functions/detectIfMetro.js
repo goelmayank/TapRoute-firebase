@@ -1,7 +1,7 @@
 var request = require("request");
 
-exports.detectIfMetro = function (lat, lng,callback){
-  var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"&key=AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk";
+exports.detectIfMetro = function (placeid,callback){
+  var url = "https://maps.googleapis.com/maps/api/place/details/json?"+placeid+"&"key=AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk";
   return (new Promise((resolve, reject)=>{
     
     request(url, callback)
