@@ -1,6 +1,6 @@
 var request = require("request");
 
-exports.reverseGeocoding = function (lat, lng,callback){
+exports.reverseGeocoding = function (lat, lng){
   var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"&key=AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk";
   return (new Promise((resolve, reject)=>{
     

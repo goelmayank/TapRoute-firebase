@@ -164,14 +164,12 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 	}
 });
 
-// Make external request
-exports.sendExternalRequest = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
-	console.log(event.data)
+exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
 	require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
 	.then(data => {
-		console.log(data);
+		admin.database().ref('log/123/').set(data);
 	});
-	// require("./detectIfMetro").detectIfMetro(place_id,);
+	// require("./detectIfMetro").detectIfMetro(place_id);
 
 });
 
