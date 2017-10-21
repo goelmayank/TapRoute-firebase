@@ -1,5 +1,15 @@
 {
   "rules": {
+    "gps_feed":{
+      "users":{
+        ".read": true,
+        ".write": "auth != null"
+      },
+      "drivers":{
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
     "deals": {
       ".read": true,
       ".write": "auth != null"
