@@ -1,4 +1,22 @@
-var request = require("request");
+var gMapsClient = require('@google/maps').createClient({
+  key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
+});
+
+exports.reverseGeocoding = function (lat, lng, callback){
+  gMapsClient.reverseGeocode({
+    latlng:[lat, lng]
+  },
+    (err, response) =>{
+      if(!err && response.status==200){
+        console.log(response.json.results)
+        return response.json.results
+      }
+    });
+}
+
+
+/* var request = require("request");
+
 
 exports.reverseGeocoding = function (lat, lng,callback){
   var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"&key=AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk";
@@ -13,4 +31,4 @@ exports.reverseGeocoding = function (lat, lng,callback){
         }
       }
   }))
-}
+} */
