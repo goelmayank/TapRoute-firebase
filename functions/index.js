@@ -167,11 +167,11 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 // Make external request
 exports.sendExternalRequest = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
 	console.log(event.data)
-	require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
+	require("./detectIfMetro").detectIfMetro(event.data.lat, event.data.lng)
 	.then(data => {
 		console.log(data);
 	});
-	// require("./detectIfMetro").detectIfMetro(place_id,);
+	// require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
 
 });
 
