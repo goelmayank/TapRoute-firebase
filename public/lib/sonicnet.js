@@ -70,6 +70,7 @@ module.exports = RingBuffer;
 var ALPHABET = '\n abcdefghijklmnopqrstuvwxyz0123456789,.!?@*';
 
 function SonicCoder(params) {
+
   params = params || {};
   this.freqMin = params.freqMin || 18500;
   this.freqMax = params.freqMax || 19500;
@@ -433,7 +434,7 @@ var audioContext = new window.AudioContext() || new webkitAudioContext();
  */
 function SonicSocket(params) {
   params = params || {};
-  this.coder = params.coder || new SonicCoder();
+  this.coder = params.coder || new SonicCoder(params);
   this.charDuration = params.charDuration || 0.2;
   this.coder = params.coder || new SonicCoder(params);
   this.rampDuration = params.rampDuration || 0.001;
