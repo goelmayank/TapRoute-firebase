@@ -58,31 +58,31 @@ admin.initializeApp(functions.config().firebase);
 });
 
 //push notification
-exports.sendMessageNotification = functions.database.ref('conversations/{conversationID}/messages/{messageID}').onWrite(event => {
-	if (event.data.previous.exists()) {
-		return;
-	}
+// exports.sendMessageNotification = functions.database.ref('conversations/{conversationID}/messages/{messageID}').onWrite(event => {
+// 	if (event.data.previous.exists()) {
+// 		return;
+// 	}
 
-	firebase.database().ref('messages').child(event.params.messageID).once('value').then(function(snap) {
-		var messageData = snap.val();
+// 	firebase.database().ref('messages').child(event.params.messageID).once('value').then(function(snap) {
+// 		var messageData = snap.val();
 
-		var topic = 'notifications_' + messageData.receiverKey;
-		var payload = {
-			notification: {
-				title: "You got a new Message",
-				body: messageData.content,
-			}
-		};
+// 		var topic = 'notifications_' + messageData.receiverKey;
+// 		var payload = {
+// 			notification: {
+// 				title: "You got a new Message",
+// 				body: messageData.content,
+// 			}
+// 		};
 
-		admin.messaging().sendToTopic(topic, payload)
-		.then(function(response) {
-			console.log("Successfully sent message:", response);
-		})
-		.catch(function(error) {
-			console.log("Error sending message:", error);
-		});
-	});
-});
+// 		admin.messaging().sendToTopic(topic, payload)
+// 		.then(function(response) {
+// 			console.log("Successfully sent message:", response);
+// 		})
+// 		.catch(function(error) {
+// 			console.log("Error sending message:", error);
+// 		});
+// 	});
+// });
 
 // calculate driver's rating
 exports.calculateRating = functions.database.ref('/trips/{tripId}').onWrite(function (event) {
@@ -167,31 +167,18 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 
 const detectIfMetroModule = require("./detectIfMetro")
 const reverseGeocodingModule = require("./reverseGeocoding")
-functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler);
-// functions.database.ref('/gps_feed/users/{userId}').onWrite(reverseGeocodingModule.handler);
+exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler);
 
-
-// Make external request
-// exports.sendExternalRequest = functions.database.ref('/gps_feed/users/{userId}').onWrite(function(event) {
-// 	console.log(event.data)
-// 	require("./detectIfMetro").detectIfMetro(event.data.lat, event.data.lng)
-// 	.then(data => {
-// 		console.log(data);
-// 	});
-// 	// require("./reverseGeocoding").reverseGeocoding(event.data.lat, event.data.lng)
-
+// var dist = require("./getDistance");
+// var data = {};
+// data.origin="33.71468353,73.06603241";
+// data.destination="33.71468443,73.06603432";
+// dist.getDistanceBetweenTwoPoints(data,function(err,success) {
+// 	console.log(err);
+// 	console.log(success);
 // });
 
-var dist = require("./getDistance");
-var data = {};
-data.origin="33.71468353,73.06603241";
-data.destination="33.71468443,73.06603432";
-dist.getDistanceBetweenTwoPoints(data,function(err,success) {
-	console.log(err);
-	console.log(success);
-});
-
-console.log('finding journey...')
-require("./findJourney").fullRide({origin: '12.9913, 77.6521', destination: '12.9719, 77.6412'}, function(res){
-	console.log('**********find_journey************\n', res)
-});
+// console.log('finding journey...')
+// require("./findJourney").fullRide({origin: '12.9913, 77.6521', destination: '12.9719, 77.6412'}, function(res){
+// 	console.log('**********find_journey************\n', res)
+// });
