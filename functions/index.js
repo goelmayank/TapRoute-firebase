@@ -167,7 +167,7 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 
 const detectIfMetroModule = require("./detectIfMetro")
 const reverseGeocodingModule = require("./reverseGeocoding")
-exports.detectIfMetroModule = functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler);
+functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler);
 // functions.database.ref('/gps_feed/users/{userId}').onWrite(reverseGeocodingModule.handler);
 
 

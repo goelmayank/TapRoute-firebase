@@ -4,7 +4,7 @@ var gMapsClient = require('@google/maps').createClient({
 
 exports.handler = (even, callback)=>{
   gMapsClient.reverseGeocode({
-    latlng:[event.data.lat, event.data.lng]
+    latlng:[event.data.val().lat, event.data.val().lng]
   },
     (err, response) =>{
       if(!err && response.status==200){

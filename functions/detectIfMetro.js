@@ -5,11 +5,11 @@ var gMapsClient = require('@google/maps').createClient(
 });
 
 exports.handler = (event, callback)=>{
-  console.log(event.data);
+  console.log(event.data.val());
   gMapsClient.places({
       location:{
-        latitude: event.data.lat,
-        longitude: event.data.lng
+        latitude: event.data.val().lat,
+        longitude: event.data.val().lng
       },
       type: "subway_station"
     }, (err, response) =>{
