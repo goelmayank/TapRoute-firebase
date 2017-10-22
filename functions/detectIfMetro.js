@@ -10,10 +10,9 @@ exports.handler = (event, callback)=>{
 
 
   console.log(event.data.val());
-  return gMapsClient.places({
-      location:[event.data.val().lat, event.data.val().lng],
-      radius: 100,
-      types: ['subway_station'],
+  return gMapsClient.reverseGeocode({
+      latlng: [event.data.val().lat, event.data.val().lng],
+      result_type: ['subway_station'],
     }, (err, response) =>{
     if(!err && response.status==200){
       console.log(response.json.results)
