@@ -3,15 +3,15 @@ var gMapsClient = require('@google/maps').createClient({
 });
 
 exports.handler = (event, callback)=>{
-  gMapsClient.reverseGeocode({
-    latlng:[event.data.val().lat, event.data.val().lng]
-  },
-    (err, response) =>{
-      if(!err && response.status==200){
-        console.log(response.json.results)
-        return callback(response.json);
-      }
-    });
+  return gMapsClient.reverseGeocode({
+      latlng: [event.data.val().lat, event.data.val().lng],
+      result_type: ['subway_station'],
+    }, (err, response) =>{
+    if(!err && response.status==200){
+      console.log(response.json.results)
+      return callback(response.json)
+    }
+  });
 }
 
 

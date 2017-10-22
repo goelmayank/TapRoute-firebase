@@ -3,22 +3,13 @@ var gMapsClient = require('@google/maps').createClient(
   {
   key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 });
-// const reverseGeocodingModule = require("./reverseGeocoding")
+const reverseGeocodingModule = require("./reverseGeocoding")
 
 exports.handler = (event, callback)=>{
-  // return reverseGeocodingModule.handler(event,callback);
+  return reverseGeocodingModule.handler(event,callback);
 
 
-  console.log(event.data.val());
-  return gMapsClient.reverseGeocode({
-      latlng: [event.data.val().lat, event.data.val().lng],
-      result_type: ['subway_station'],
-    }, (err, response) =>{
-    if(!err && response.status==200){
-      console.log(response.json.results)
-      return callback(response.json)
-    }
-  });
+  
 }
 
 /**googleMapsClient.geocode({

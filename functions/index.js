@@ -166,9 +166,10 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 
 const detectIfMetroModule = require("./detectIfMetro")
 exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWrite((e)=>{
-	detectIfMetroModule.handler(e,function(res){
-		admin.database().ref('log/123').set(res);
-	})
+	detectIfMetroModule.handler(e,console.log)
+// function(res){
+// 		admin.database().ref('log/123').set(res);
+// 	})
 });
 
 // var dist = require("./getDistance");
