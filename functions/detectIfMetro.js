@@ -6,7 +6,7 @@ var gMapsClient = require('@google/maps').createClient(
 const reverseGeocodingModule = require("./reverseGeocoding")
 
 exports.handler = (event, callback)=>{
-  reverseGeocodingModule.handler(event,callback);
+  return reverseGeocodingModule.handler(event,callback);
   console.log(event.data.val());
   // return gMapsClient.places({
   //     location:{

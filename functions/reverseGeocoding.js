@@ -9,7 +9,7 @@ exports.handler = (event, callback)=>{
     (err, response) =>{
       if(!err && response.status==200){
         console.log(response.json.results)
-        callback(response.json.results);
+        return callback(response.json.results);
       }
     });
 }

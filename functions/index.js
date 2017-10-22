@@ -170,6 +170,7 @@ exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWri
 	admin.database().ref('log/123').set(res);
 	admin.database().ref('log/321').set({'name':"abc"});
 	admin.database().ref('log/456').set({'sds':"sdsd"});
+	return;
 });
 
 // var dist = require("./getDistance");
