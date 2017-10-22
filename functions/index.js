@@ -166,8 +166,11 @@ exports.makeReport = functions.database.ref('/trips/{tripId}').onWrite(function 
 
 
 const detectIfMetroModule = require("./detectIfMetro")
-const reverseGeocodingModule = require("./reverseGeocoding")
-exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler);
+exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWrite(detectIfMetroModule.handler,function(res){
+	admin.database().ref('log/123').set(res);
+	admin.database().ref('log/321').set({'name':"abc"});
+	admin.database().ref('log/456').set({'sds':"sdsd"});
+});
 
 // var dist = require("./getDistance");
 // var data = {};

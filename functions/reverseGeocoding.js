@@ -2,14 +2,14 @@ var gMapsClient = require('@google/maps').createClient({
   key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 });
 
-exports.handler = (even, callback)=>{
+exports.handler = (event, callback)=>{
   gMapsClient.reverseGeocode({
     latlng:[event.data.val().lat, event.data.val().lng]
   },
     (err, response) =>{
       if(!err && response.status==200){
         console.log(response.json.results)
-        return response.json.results
+        callback(response.json.results);
       }
     });
 }

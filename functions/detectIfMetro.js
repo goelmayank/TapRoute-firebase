@@ -3,21 +3,23 @@ var gMapsClient = require('@google/maps').createClient(
   {
   key:'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 });
+const reverseGeocodingModule = require("./reverseGeocoding")
 
 exports.handler = (event, callback)=>{
+  reverseGeocodingModule.handler(event,callback);
   console.log(event.data.val());
-  gMapsClient.places({
-      location:{
-        latitude: event.data.val().lat,
-        longitude: event.data.val().lng
-      },
-      type: "subway_station"
-    }, (err, response) =>{
-    if(!err && response.status==200){
-      console.log(response.json.results)
-      return response.json.results
-    }
-  });
+  // return gMapsClient.places({
+  //     location:{
+  //       latitude: event.data.val().lat,
+  //       longitude: event.data.val().lng
+  //     },
+  //     type: "subway_station"
+  //   }, (err, response) =>{
+  //   if(!err && response.status==200){
+  //     console.log(response.json.results)
+  //     return response.json.results
+  //   }
+  // });
 }
 
 /**googleMapsClient.geocode({
