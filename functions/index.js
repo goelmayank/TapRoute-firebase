@@ -185,3 +185,21 @@ exports.detectIfMetro = functions.database.ref('/gps_feed/users/{userId}').onWri
 // require("./findJourney").fullRide({origin: '12.9913, 77.6521', destination: '12.9719, 77.6412'}, function(res){
 // 	console.log('**********find_journey************\n', res)
 // });
+
+const findJouneyModule = require("./findJourney")
+// Listen for updates to any `user` document.
+exports.updateJourney = functions.firestore
+  .document('journey/{journeyId}')
+  .onCreate((event) => {
+
+    const data = event.data.data();
+    const origin =  data.origin;
+    const destination = data.destination;
+    detectIfMetroModule.fullRide({origin,destination},function(data){
+    console.log(data)
+    });
+
+    return event.data.ref.set({
+      message: "added"
+    }, {merge: true});
+  });

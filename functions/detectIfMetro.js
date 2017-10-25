@@ -7,9 +7,6 @@ const reverseGeocodingModule = require("./reverseGeocoding")
 
 exports.handler = (event, callback)=>{
   return reverseGeocodingModule.handler(event,callback);
-
-
-  
 }
 
 /**googleMapsClient.geocode({

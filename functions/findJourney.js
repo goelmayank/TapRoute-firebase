@@ -2,6 +2,10 @@ var request = require("request");
 let baseUrl = 'https://maps.googleapis.com/maps/api/';
 let apiKey = 'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk';
 
+exports.handler = (event, callback)=>{
+  return reverseGeocodingModule.handler(event,callback);
+}
+
 exports.fullRide = function({origin, destination} = {}, callback){
 	var data = {};
 	
