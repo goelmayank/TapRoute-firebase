@@ -16,6 +16,13 @@ exports.metroSearch = function({origin,destination},callback){
 			self.first_mile_metro_details = results[0];
 			self.last_mile_metro_details = results[1];
 
+			// Hardcoded Google Places ID for Baiyappanhalli Metro Station
+			if (self.first_mile_metro_details.id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
+				self.mode_active = 'FIRST_MILE'
+			}
+			if (self.last_mile_metro_details.id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
+				self.mode_active = 'LAST_MILE'
+			}
 
 			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat(), lng: self.first_mile_metro_details.geometry.location.lng()},"", function(duration, fare, route){
 

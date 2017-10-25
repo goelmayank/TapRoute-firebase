@@ -20,7 +20,7 @@ exports.updateJourney = functions.firestore
 			first_mile_duration: data.first_mile_duration,
 			first_mile_solo_fare: data.first_mile_solo_fare,
 			first_mile_share_fare: data.first_mile_share_fare,
-			mode_active: "FIRST_MILE",
+			mode_active: data.mode_active,
 			transit_lines_text: data.transit_lines_text,
 			transit_stops: data.transit_stops,
 			transit_duration_number: data.transit_duration_number,
