@@ -7,17 +7,17 @@ var gMapsClient = require('@google/maps').createClient(
 	key: apiKey
 });
 
-function metroSearch({origin,destination},callback){
+exports.metroSearch = function({origin,destination},callback){
 	var self = {};
 	Promise.all([
-		(getNearbyMetro(self.origin.location, self)),
-		(getNearbyMetro(self.destination.location, self))
-		]).subscribe(results => {
+		(getNearbyMetro(origin.location, self)),
+		(getNearbyMetro(destination.location, self))
+		]).then(results => {
 			self.first_mile_metro_details = results[0];
 			self.last_mile_metro_details = results[1];
 
 
-			tripFare(self.origin.location,{lat: self.first_mile_metro_details.geometry.location.lat(), lng: self.first_mile_metro_details.geometry.location.lng()},"", function(duration, fare, route){
+			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat(), lng: self.first_mile_metro_details.geometry.location.lng()},"", function(duration, fare, route){
 
 				self.first_mile_solo_fare = fare;
 				self.first_mile_share_fare = Math.trunc(fare*0.6);
@@ -95,7 +95,7 @@ function metroSearch({origin,destination},callback){
 
 	}
 
-	function getNearbyMetro(position_latlong: any, env:any){
+	function getNearbyMetro(position_latlong,env){
 		var self = env;
 		console.log('getNearbyMetro for', position_latlong);
 
@@ -103,13 +103,13 @@ function metroSearch({origin,destination},callback){
 
 		var request = {
 			location: location,
-			rankBy: gMapsClient.places.RankBy.DISTANCE,
-			types: ["subway_station"]
+			rankby: "distance",
+			type: "subway_station"
 		}
 
 		return (new Promise(function(resolve, rejected){
 
-			gMapsClient.places(request, callback);
+			gMapsClient.placesNearby(request, callback);
 
 			function callback(data, status){
 				if (status == "OK") {
