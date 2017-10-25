@@ -2,140 +2,158 @@ var request = require("request");
 let baseUrl = 'https://maps.googleapis.com/maps/api/';
 let apiKey = 'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk';
 
-exports.handler = (event, callback)=>{
-  return reverseGeocodingModule.handler(event,callback);
-}
+var gMapsClient = require('@google/maps').createClient(
+{
+	key: apiKey
+});
 
-exports.fullRide = function({origin, destination} = {}, callback){
-	var data = {};
-	
-	Promise.all([getNearbyMetro(origin), getNearbyMetro(destination)]).then(results =>{
-		
-		data.origin_metro = results[0];
-		data.destination_metro = results[1];
-		data.trips = [];
-		// console.log(data.origin_metro)
-		getTripDetails(origin, data.origin_metro.geometry.location.lat +","+ data.origin_metro.geometry.location.lng, "now")
-		.then(route =>{
-	
-			data.trips.push(Object.assign(route,{'name': 'first_mile'}));
-			var origin_end = addSeconds(null, route.legs[0].duration.value);
-	
-			getTransitDetails(data.origin_metro.place_id, data.destination_metro.place_id,  Math.floor(origin_end.getTime()/1000))
-			.then(routes =>{
-	
-				var route = findRoute(0, routes);
+function metroSearch({origin,destination},callback){
+	var self = {};
+	Promise.all([
+		(getNearbyMetro(self.origin.location, self)),
+		(getNearbyMetro(self.destination.location, self))
+		]).subscribe(results => {
+			self.first_mile_metro_details = results[0];
+			self.last_mile_metro_details = results[1];
 
-				if(route){
-					data.transit = route;					
-					var transit_end = addSeconds(origin_end, route.legs[0].duration.value);
-					
-					getTripDetails(data.destination_metro.geometry.location.lat +","+ data.destination_metro.geometry.location.lng,destination, Math.floor(transit_end.getTime()/1000))
-					.then(route =>{
-						data.trips.push(Object.assign(route,{'name': 'last_mile'}));
-						callback(data)						
-					})
-				}
-			}).catch(err=>{
-				console.log('transit details err :', err);	
-			})			
-		}).catch(err=>{
-			console.log('origin trip err :', err);
+
+			tripFare(self.origin.location,{lat: self.first_mile_metro_details.geometry.location.lat(), lng: self.first_mile_metro_details.geometry.location.lng()},"", function(duration, fare, route){
+
+				self.first_mile_solo_fare = fare;
+				self.first_mile_share_fare = Math.trunc(fare*0.6);
+
+				self.first_mile_duration = duration;
+				self.total_time += parseInt(duration)
+
+				self.total_solo_fare += self.first_mile_solo_fare;
+				self.total_share_fare += self.first_mile_share_fare;
+
+				self.origin_end_time = addSeconds(self.origin_start_time, route.legs[0].duration.value);
+
+				metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, "&departure_time="+ Math.floor(self.origin_end_time.getTime()/1000), function(route){
+
+
+					var next = (new Date()).getTime();
+
+
+					if(route){
+						self.metro_fare = route.fare.value;
+						self.total_solo_fare += self.metro_fare;
+						self.total_share_fare += self.metro_fare;
+
+						self.transit_end_time = addSeconds(self.origin_end_time, route.legs[0].duration.value);
+						next = Math.floor(self.transit_end_time.getTime()/1000);
+
+						self.transit_duration = route.legs[0].duration.text;
+						self.transit_duration_number = self.transit_duration.split(' ')[0];
+						self.transit_duration_text = self.transit_duration.split(' ')[1];
+
+						self.total_time += parseInt(self.transit_duration.split(' ')[0]);
+
+						self.transit_info = route.legs[0].steps;
+						var lines = [];
+						for(var i in self.transit_info){
+							if(self.transit_info[i].travel_mode == "TRANSIT"){
+								lines.push(self.transit_info[i].transit_details.line.short_name);
+								self.transit_stops += self.transit_info[i].transit_details.num_stops;
+							}
+						}
+						self.transit_lines_text = lines.join(" > ");
+						self.transit_first_line = lines[0];
+						if(lines[1])
+							self.transit_second_line = lines[1];
+
+						if(self.transit_end_time.getMinutes() < 10)
+							self.transit_end_time_text = self.transit_end_time.getHours() +":0" + self.transit_end_time.getMinutes()
+						else
+							self.transit_end_time_text = self.transit_end_time.getHours() +":" + self.transit_end_time.getMinutes()
+					}
+
+					tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat(), lng: self.last_mile_metro_details.geometry.location.lng()},"&departure_time="+ next, function(duration, fare, route){
+
+						self.last_mile_solo_fare = fare;
+						self.last_mile_share_fare = Math.trunc(fare*0.6);
+
+						self.total_solo_fare += self.last_mile_solo_fare;
+						self.total_share_fare += self.last_mile_share_fare;
+
+						self.last_mile_duration = duration;
+						self.total_time += parseInt(duration);
+						self.destination_end_time = addSeconds((self.transit_end_time || self.origin_end_time), route.legs[0].duration.value);
+						if(self.destination_end_time.getMinutes() < 10)
+							self.destination_end_time_text = self.destination_end_time.getHours() +":0" +self.destination_end_time.getMinutes()
+						else
+							self.destination_end_time_text = self.destination_end_time.getHours() +":" +self.destination_end_time.getMinutes()
+
+						callback(self);
+					});
+				});
+
+			});
+
 		})
 
-	}).catch(err =>{
-		console.log('getNearbyMetro err :', err);
-	})
-}
+	}
 
+	function getNearbyMetro(position_latlong: any, env:any){
+		var self = env;
+		console.log('getNearbyMetro for', position_latlong);
 
-function getNearbyMetro(position_cords){
-		
-		let url = constructUrl('place/nearbysearch/', {
-			location: position_cords,
-			rankby: 'distance',
-			type: "subway_station"
-		});
+		var location = position_latlong.lat + "," + position_latlong.lng;
 
+		var request = {
+			location: location,
+			rankBy: gMapsClient.places.RankBy.DISTANCE,
+			types: ["subway_station"]
+		}
 
-		return (new Promise(function(resolve, reject){
-			
-			request(url, callback)
+		return (new Promise(function(resolve, rejected){
 
-			function callback(err, response, body){ 
-				if(err) reject(err);
-				// console.log('inside request callback', Object.keys(JSON.parse(body).results));
-				if (response.statusCode == 200) {
-					resolve(JSON.parse(body).results[0]);
+			gMapsClient.places(request, callback);
+
+			function callback(data, status){
+				if (status == "OK") {
+					resolve(data[0]);
+				}else{
+					rejected(status);
 				}
 			}
 		}))
-}
+	}
 
-function constructUrl(rel_url, config){
-	string = baseUrl + rel_url + 'json?key=' + apiKey;
-	for(var k in config)
-		string += ("&" + k + "=" + config[k]);
-	return string;
-}
+	function tripFare(latlng1,latlng2,custom, callback){
 
-
-
-function getTripDetails(position1, position2, departure_time){
-	let url = constructUrl('directions/', {
-		origin: position1,
-		destination: position2,
-		mode: "driving",
-		departure_time,
-	})
-	return (new Promise((resolve, reject)=>{
-
-		request(url, callback)
-
-		function callback(err, response, body){ 
-				if(err) reject(err);
-				if (response.statusCode == 200) {
-					console.log(Object.keys(JSON.parse(body)))
-					resolve(JSON.parse(body).routes[0]);
-				}
-			}
-	}))
-}
-
-
-function getTransitDetails(place_id1, place_id2, departure_time){
-	let url = constructUrl('directions/', {
-		origin: 'place_id:' + place_id1,
-		destination: 'place_id:' + place_id2,
-		mode: "transit",
-		departure_time,
-		alternatives: 'true',
+		return gMapsClient.directions(latlng1.lat + ',' + latlng1.lng, latlng2.lat + ',' + latlng2.lng, "driving").subscribe(r => {
+			if(r){
+			// console.log('milefare', r.routes[0].legs[0])
+			var distance = r.routes[0].legs[0].distance;
+			var duration = r.routes[0].legs[0].duration;
+			var fare = Math.round(this.base_fare + (distance.value/1000)*this.per_km_fare);
+			// console.log(fare)
+			callback(duration.text.match(/\d+/), fare, r.routes[0])
+		}
 	});
-	return (new Promise((resolve, reject)=>{
-		
-		request(url, callback)
+	}
 
-		function callback(err, response, body){ 
-				if(err) reject(err);
-				if (response.statusCode == 200) {
-					resolve(JSON.parse(body).routes);
-				}
+
+	function addSeconds(start, seconds){
+		return new Date((start || (new Date())).getTime() + seconds*1000);
+	}
+
+	function metroFare(id1, id2, custom, callback){
+	// console.log("metro fare called")
+	// var name1 = latlng1.lat.toString() + ',' + latlng1.lng.toString();
+	// var name2 = latlng2.lat.toString() + ',' + latlng2.lng.toString();
+	return gMapsClient.directions('place_id:' +id1, 'place_id:'+id2, "transit", '&alternatives=true'+ custom).subscribe(r => {
+		if(r){
+			// console.log('transit fastest routes', r);
+			var route = this.findRoute(0, r.routes);
+			if(route != null){
+				// console.log('found Fare B)')
+			}else{
+				// console.log("finding fare failed")
 			}
-	}))
-}
-
-function findRoute(i, routes){
-		// console.log(i, routes);
-		if(i >= routes.length){
-			return null;
+			callback(route);
 		}
-		if(Object.keys(routes[i]).indexOf("fare") != -1){
-			return (routes[i]);
-		}
-		return this.findRoute(++i,routes);
-}
-
-
-function addSeconds(start, seconds){
-	return new Date((start || (new Date())).getTime() + seconds*1000);	
+	});
 }

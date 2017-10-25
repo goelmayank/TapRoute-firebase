@@ -200,6 +200,6 @@ exports.updateJourney = functions.firestore
     });
 
     return event.data.ref.set({
-      message: "added"
+      message: "added"	
     }, {merge: true});
   });
