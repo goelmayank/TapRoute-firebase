@@ -112,18 +112,18 @@ var gMapsClient = require('@google/maps').createClient(
 			self.last_mile_metro_details = results[1];
 
 			// Hardcoded Google Places ID for Baiyappanhalli Metro Station
-			if (self.first_mile_metro_details.id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
+			if (self.first_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
 				self.mode_active = 'FIRST_MILE'
 			}
-			if (self.last_mile_metro_details.id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
+			if (self.last_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
 				self.mode_active = 'LAST_MILE'
 			}
 			console.log('location first mile metro', results[0].geometry.location);
-			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng}, new Date().getTime()/1000, callback)
+			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng}, new Date().getTime()/1000 + 43200, callback)
 
 			}).catch(callback)
 	    }
-
+ 
 		function getNearbyMetro(position_latlong){
 			//console.log('getNearbyMetro for', position_latlong);
 
@@ -165,6 +165,7 @@ var gMapsClient = require('@google/maps').createClient(
 					callback2(r.json.results)
 			})
 			function callback2(r) {
+				console.log('++++++ trip fare callback ++++', r)
 				if(r){
 				// console.log('milefare', r.routes[0].legs[0])
 				var distance = r.routes[0].legs[0].distance;
