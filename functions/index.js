@@ -44,7 +44,7 @@ exports.updateJourney = functions.firestore
 
 	});
 
-const calculateRideToDemandRatio = require("./rideQuants")
-exports.rideRatios = functions.https.onRequest((req, res) => {
-	rideRatios.handler(req, res, database, firestore);
-});
+// const calculateRideToDemandRatio = require("./rideQuants")
+// exports.rideRatios = functions.https.onRequest((req, res) => {
+// 	rideRatios.handler(req, res, database, firestore);
+// });

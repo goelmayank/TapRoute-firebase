@@ -98,7 +98,7 @@ var gMapsClient = require('@google/maps').createClient(
 
 // 			});
 
-// 		}).catch(e=>console.log)
+// 		}).catch(console.log)
 // 		}
 
 	    
@@ -119,7 +119,13 @@ var gMapsClient = require('@google/maps').createClient(
 				self.mode_active = 'LAST_MILE'
 			}
 			console.log('location first mile metro', results[0].geometry.location);
-			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng}, new Date().getTime()/1000 + 43200, callback)
+			
+			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng}, Math.floor(new Date().getTime()/1000), function(response){
+				console.log('===============Inside tripfare callback ==========');
+
+			
+				
+			})
 
 			}).catch(callback)
 	    }
@@ -159,13 +165,16 @@ var gMapsClient = require('@google/maps').createClient(
 				mode: "driving",
 				departure_time: dept
 			};
-
-			return gMapsClient.directions(request, function(r){
+			
+			return gMapsClient.directions(request, function(err,response){
+				if(err)throw err
+				console.log(r)
 				if(r.status == 200 && r.json.status == "OK")
 					callback2(r.json.results)
 			})
+
 			function callback2(r) {
-				console.log('++++++ trip fare callback ++++', r)
+				console.log('++++++ trip fare callback2 ++++', r)
 				if(r){
 				// console.log('milefare', r.routes[0].legs[0])
 				var distance = r.routes[0].legs[0].distance;
