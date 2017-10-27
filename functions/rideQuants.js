@@ -53,5 +53,8 @@ queryLat and queryLng store the gps data from the query made*/
             destinations: [queryLat, queryLng],
             traffic_model: 'pessimistic'
     });
+});
 }
+
+//the following snippet is to read ride requests made from queried location
 /*======================================ENDS HERE==================================================*/
