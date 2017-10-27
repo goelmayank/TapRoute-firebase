@@ -7,6 +7,9 @@ var gMapsClient = require('@google/maps').createClient(
 	key: apiKey
 });
 
+let base_fare = 25;
+let per_km_fare = 13;
+
 // exports.metroSearch = function({origin,destination},callback){
 // 	var self = {};
 // 	Promise.all([
@@ -106,29 +109,134 @@ var gMapsClient = require('@google/maps').createClient(
 	    	self = {};
 	    	self.origin = origin;
 	    	self.destination = destination;
+
+			self.total_solo_fare = 0;
+			self.total_share_fare = 0;
+	    	
 	    	Promise.all([getNearbyMetro(origin.location), getNearbyMetro(destination.location)])
 	    	.then(results => {
-			self.first_mile_metro_details = results[0];
-			self.last_mile_metro_details = results[1];
+				self.first_mile_metro_details = results[0];
+				self.last_mile_metro_details = results[1];
 
-			// Hardcoded Google Places ID for Baiyappanhalli Metro Station
-			if (self.first_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
-				self.mode_active = 'FIRST_MILE'
-			}
-			if (self.last_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
-				self.mode_active = 'LAST_MILE'
-			}
-			console.log('location first mile metro', results[0].geometry.location);
-			
-			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng}, Math.floor(new Date().getTime()/1000), function(response){
-				console.log('===============Inside tripfare callback ==========');
+				// Hardcoded Google Places ID for Baiyappanhalli Metro Station
+				if (self.first_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
+					self.mode_active = 'FIRST_MILE'
+				}
+				if (self.last_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
+					self.mode_active = 'LAST_MILE'
+				}
+				console.log('location first mile metro', results[1].geometry.location, results[0].geometry.location);
+				self.origin_start_time = new Date()
+				tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng},Math.floor(self.origin_start_time.getTime()/1000) , function(duration, fare,  route){
+					console.log('===============Inside tripfare callback ==========');
+					try {
+						self.first_mile_solo_fare = fare;
+						self.first_mile_share_fare = Math.trunc(fare*0.6);
 
-			
-				
-			})
+						self.first_mile_duration = duration;
+						self.total_time += parseInt(duration)
+
+						self.total_solo_fare += self.first_mile_solo_fare;
+						self.total_share_fare += self.first_mile_share_fare;
+
+						self.origin_end_time = addSeconds(self.origin_start_time, route.legs[0].duration.value);
+
+						metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, Math.floor(self.origin_end_time.getTime()/1000), function(route){
+							console.log('>>>>>>>>> Inside metro callback <<<<<<<<<<< (yay :) )')
+
+
+							var next = (new Date()).getTime();
+
+
+							if(route){
+								self.metro_fare = route.fare.value;
+								self.total_solo_fare += self.metro_fare;
+								self.total_share_fare += self.metro_fare;
+
+								self.transit_end_time = addSeconds(self.origin_end_time, route.legs[0].duration.value);
+								next = Math.floor(self.transit_end_time.getTime()/1000);
+
+								self.transit_duration = route.legs[0].duration.text;
+								self.transit_duration_number = self.transit_duration.split(' ')[0];
+								self.transit_duration_text = self.transit_duration.split(' ')[1];
+
+								self.total_time += parseInt(self.transit_duration.split(' ')[0]);
+
+								self.transit_info = route.legs[0].steps;
+								var lines = [];
+								for(var i in self.transit_info){
+									if(self.transit_info[i].travel_mode == "TRANSIT"){
+										lines.push(self.transit_info[i].transit_details.line.short_name);
+										self.transit_stops += self.transit_info[i].transit_details.num_stops;
+									}
+								}
+								self.transit_lines_text = lines.join(" > ");
+								self.transit_first_line = lines[0];
+								if(lines[1])
+									self.transit_second_line = lines[1];
+
+								if(self.transit_end_time.getMinutes() < 10)
+									self.transit_end_time_text = self.transit_end_time.getHours() +":0" + self.transit_end_time.getMinutes()
+								else
+									self.transit_end_time_text = self.transit_end_time.getHours() +":" + self.transit_end_time.getMinutes()
+							}
+							console.log("dddddddddd  trip fare called dddddddddd");
+							tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat, lng: self.last_mile_metro_details.geometry.location.lng},next, function(duration, fare, route){
+
+								self.last_mile_solo_fare = fare;
+								self.last_mile_share_fare = Math.trunc(fare*0.6);
+
+								self.total_solo_fare += self.last_mile_solo_fare;
+								self.total_share_fare += self.last_mile_share_fare;
+
+								self.last_mile_duration = duration;
+								self.total_time += parseInt(duration);
+								self.destination_end_time = addSeconds((self.transit_end_time || self.origin_end_time), route.legs[0].duration.value);
+								if(self.destination_end_time.getMinutes() < 10)
+									self.destination_end_time_text = self.destination_end_time.getHours() +":0" +self.destination_end_time.getMinutes()
+								else
+									self.destination_end_time_text = self.destination_end_time.getHours() +":" +self.destination_end_time.getMinutes()
+
+								callback(self);
+							});
+						});
+					}catch(e){
+						console.log('caught error', e, ' ==> throwing');
+						throw e;
+					}
+				})
 
 			}).catch(callback)
 	    }
+
+	    /*******
+		*
+		* @ref
+		*
+		* latlang object:
+		* {
+		* 	lat: <latitude>,
+		* 	lng: <longitue>
+		* }
+		* 
+	    *******/
+
+	    /**********
+		*
+		*
+		* @function getNearbyMetro
+		*
+		* @params
+		* position_latlng 	// latlng object of place  
+		*
+		*@return
+		*Promise 
+		*  @resolve results[0] object ( according to gmaps api)
+		*  @reject response ( gmaps api response)
+		*
+		* 
+		***********/
+
  
 		function getNearbyMetro(position_latlong){
 			//console.log('getNearbyMetro for', position_latlong);
@@ -146,7 +254,7 @@ var gMapsClient = require('@google/maps').createClient(
 				gMapsClient.placesNearby(request, callback);
 
 				function callback(err, response){
-					if(err)throw err;
+					if(err){console.log("ERRRRRRRR", err);throw err;}
 					console.log('===============Inside placesNearby callback ==========');
 					
 					if (response.status == 200) {
@@ -158,6 +266,19 @@ var gMapsClient = require('@google/maps').createClient(
 			}))
 		}
 
+		/**********
+		*
+		*
+		* @function tripFare
+		*
+		* @params
+		* latlng1 	// latlng object of place 1
+		* latlng2 	// latlng object of place 2
+		* dept 		// departure time in seconds ( no decimals !important)
+		* callback 	// @params : duration<string>, fare<double>, route object  ( according to gmaps api)
+		*
+		***********/
+
 		function tripFare(latlng1,latlng2,dept, callback){
 			var request = {
 				origin: latlng1.lat+"," + latlng1.lng,
@@ -165,12 +286,14 @@ var gMapsClient = require('@google/maps').createClient(
 				mode: "driving",
 				departure_time: dept
 			};
+			console.log('++++++ trip fare ++++')
 			
-			return gMapsClient.directions(request, function(err,response){
-				if(err)throw err
-				console.log(r)
-				if(r.status == 200 && r.json.status == "OK")
-					callback2(r.json.results)
+			gMapsClient.directions(request, function(err,response){
+				console.log("inside directions callback" , err ,response)
+				if(err){console.log("ERRRRRRRR", err);throw err;}
+				console.log(response)
+				if(response.status == 200 && response.json.status == "OK")
+					callback2(response.json)
 			})
 
 			function callback2(r) {
@@ -179,22 +302,37 @@ var gMapsClient = require('@google/maps').createClient(
 				// console.log('milefare', r.routes[0].legs[0])
 				var distance = r.routes[0].legs[0].distance;
 				var duration = r.routes[0].legs[0].duration;
-				var fare = Math.round(this.base_fare + (distance.value/1000)*this.per_km_fare);
-				// console.log(fare)
+				var fare = Math.round(base_fare + (distance.value/1000)*per_km_fare);
+				console.log(fare)
 				callback(duration.text.match(/\d+/), fare, r.routes[0])
 				}
 			}
 		}
 
+		/**********
+		*
+		***********/
 
 		function addSeconds(start, seconds){
 			return new Date((start || (new Date())).getTime() + seconds*1000);
 		}
 
+		/**********
+		*
+		*
+		* @function metroFare
+		*
+		* @params
+		* id1 		// place_id of metro 1
+		* id2 		// place_id of metro 2
+		* dept 		// departure time in seconds ( no decimals !important)
+		* callback 	// parameters : route object
+		*
+		***********/
+
+
 		function metroFare(id1, id2, dept, callback){
 		// console.log("metro fare called")
-		// var name1 = latlng1.lat.toString() + ',' + latlng1.lng.toString();
-		// var name2 = latlng2.lat.toString() + ',' + latlng2.lng.toString();
 		var request = {
 				origin: "place_id:"+id1,
 				destination: "place_id:"+id2,
@@ -202,20 +340,36 @@ var gMapsClient = require('@google/maps').createClient(
 				alternatives: true,
 				mode: "transit"
 			};
-		return gMapsClient.directions(request, function(r){
+		console.log('++++++ metro fare ++++')
+		return gMapsClient.directions(request, function(e,r){
+			console.log("inside directions callback" , e ,r)
+			if(e){console.log("ERRRRRRRR", e);throw e;}
 			if(r.status == 200 && r.json.status == "OK")
-				callback2(r.json.results)
+				callback2(r.json)
 		})
 		function callback2(r){
+			console.log('transit fastest routes', r);	
 			if(r){
-				// console.log('transit fastest routes', r);
-				var route = this.findRoute(0, r.routes);
+				
+				var route = findRoute(0, r.routes);
 				if(route != null){
-					// console.log('found Fare B)')
+					console.log('found Fare B)')
 				}else{
-					// console.log("finding fare failed")
+					console.log("finding fare failed")
 				}
 				callback(route);
 			}
 		}
+}
+
+// finds the fastest route with fare property
+function findRoute(i, routes){
+	// console.log(i, routes);
+	if(i >= routes.length){
+		return null;
+	}
+	if(Object.keys(routes[i]).indexOf("fare") != -1){
+		return (routes[i]);
+	}
+	return this.findRoute(++i,routes);
 }
