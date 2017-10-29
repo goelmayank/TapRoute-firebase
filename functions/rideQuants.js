@@ -16,7 +16,6 @@ on receiving a RESTful request on the api endpoint /rideQuant with a request bod
 /*===============================1. REQUIRED LIBRARIES AND CONFIGURATIONS==========================*/
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
 apikey = 'AIzaSyAaXO23aeFwBmXlSRweQhCdEUYoAW1OPYk'
 var gMapsClient = require('@google/maps').createClient({
     key: apikey
@@ -32,8 +31,8 @@ queryLat and queryLng store the gps data from the query made*/
 
 /*===============================3. RESPONSE DATA AGGREGATION======================================*/
 //The following snippet is to obtain the list the snapshot of current gps location of available rides    
-    var rtdb = functions.database();
-    var av_rides = rtdb.ref('available_rides');
+
+    var av_rides = database.ref('available_rides');
     
     av_rides.on('value', function (snapshot) {
         snapshot.forEach(function (listOfAvRides) {
@@ -43,8 +42,6 @@ queryLat and queryLng store the gps data from the query made*/
 
 //TODO Need Help in fetching data from listOfAvRides such that list reads as [[lat1, lng1], [lat2, lng2], [lat3, lng3]] and store it in the listOfOrigins
     var theListOfOrigins = [];
-
-
 
 //The following snippet is to traverse through the list of geolocation of available rides and parse request for ddistance and time info from Google Maps Distance Matrix API and store the number of rides that are 200m or less away from origin
     allDistance = listOfAvRides.forEach(function (value) {
@@ -58,3 +55,5 @@ queryLat and queryLng store the gps data from the query made*/
 
 //the following snippet is to read ride requests made from queried location
 /*======================================ENDS HERE==================================================*/
+
+
