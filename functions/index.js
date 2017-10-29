@@ -76,8 +76,6 @@ exports.pilot = functions.https.onRequest((req, res) => {
 	console.log(bodyParse.toString((req.body)));
 
 	db.collection('survey').add(req.body).then(ref=> {
-		console.log(ref.id);
+		res.json({rsult: 'Survey with ID: ${ref.id} add'});
 	});
-	res.status(200, "added");
-	return "ABC"
 });
