@@ -112,8 +112,10 @@ let per_km_fare = 13;
 
 			self.total_solo_fare = 0;
 			self.total_share_fare = 0;
-	    	
-	    	Promise.all([getNearbyMetro(origin.location), getNearbyMetro(destination.location)])
+	    	self.transit_stops = 0;
+	    	self.total_time = 0;
+	    	self.mode_active = "";
+	    	return Promise.all([getNearbyMetro(origin.location), getNearbyMetro(destination.location)])
 	    	.then(results => {
 				self.first_mile_metro_details = results[0];
 				self.last_mile_metro_details = results[1];
@@ -127,8 +129,8 @@ let per_km_fare = 13;
 				}
 				console.log('location first mile metro', results[1].geometry.location, results[0].geometry.location);
 				self.origin_start_time = new Date()
-				tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng},Math.floor(self.origin_start_time.getTime()/1000) , function(duration, fare,  route){
-					console.log('===============Inside tripfare callback ==========');
+				return tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng},Math.floor(self.origin_start_time.getTime()/1000) , function(duration, fare,  route){
+					// console.log('===============Inside tripfare callback ==========');
 					try {
 						self.first_mile_solo_fare = fare;
 						self.first_mile_share_fare = Math.trunc(fare*0.6);
@@ -141,8 +143,8 @@ let per_km_fare = 13;
 
 						self.origin_end_time = addSeconds(self.origin_start_time, route.legs[0].duration.value);
 
-						metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, Math.floor(self.origin_end_time.getTime()/1000), function(route){
-							console.log('>>>>>>>>> Inside metro callback <<<<<<<<<<< (yay :) )')
+						return metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, Math.floor(self.origin_end_time.getTime()/1000), function(route){
+							// console.log('>>>>>>>>> Inside metro callback <<<<<<<<<<< (yay :) )')
 
 
 							var next = (new Date()).getTime();
@@ -164,10 +166,12 @@ let per_km_fare = 13;
 
 								self.transit_info = route.legs[0].steps;
 								var lines = [];
+
 								for(var i in self.transit_info){
 									if(self.transit_info[i].travel_mode == "TRANSIT"){
 										lines.push(self.transit_info[i].transit_details.line.short_name);
 										self.transit_stops += self.transit_info[i].transit_details.num_stops;
+										// console.log('>> transit_stops', self.transit_stops);
 									}
 								}
 								self.transit_lines_text = lines.join(" > ");
@@ -180,8 +184,8 @@ let per_km_fare = 13;
 								else
 									self.transit_end_time_text = self.transit_end_time.getHours() +":" + self.transit_end_time.getMinutes()
 							}
-							console.log("dddddddddd  trip fare called dddddddddd");
-							tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat, lng: self.last_mile_metro_details.geometry.location.lng},next, function(duration, fare, route){
+							// console.log("dddddddddd  trip fare called dddddddddd");
+							return tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat, lng: self.last_mile_metro_details.geometry.location.lng},next, function(duration, fare, route){
 
 								self.last_mile_solo_fare = fare;
 								self.last_mile_share_fare = Math.trunc(fare*0.6);
@@ -197,7 +201,7 @@ let per_km_fare = 13;
 								else
 									self.destination_end_time_text = self.destination_end_time.getHours() +":" +self.destination_end_time.getMinutes()
 
-								callback(self);
+								return callback(self);
 							});
 						});
 					}catch(e){
@@ -250,12 +254,12 @@ let per_km_fare = 13;
 			}
 
 			return (new Promise(function(resolve, rejected){
-				console.log('-------------- Inside promise ----------');
+				// console.log('-------------- Inside promise ----------');
 				gMapsClient.placesNearby(request, callback);
 
 				function callback(err, response){
 					if(err){console.log("ERRRRRRRR", err);throw err;}
-					console.log('===============Inside placesNearby callback ==========');
+					// console.log('===============Inside placesNearby callback ==========');
 					
 					if (response.status == 200) {
 						resolve(response.json.results[0]);
@@ -286,25 +290,25 @@ let per_km_fare = 13;
 				mode: "driving",
 				departure_time: dept
 			};
-			console.log('++++++ trip fare ++++')
+			// console.log('++++++ trip fare ++++')
 			
-			gMapsClient.directions(request, function(err,response){
-				console.log("inside directions callback" , err ,response)
+			return gMapsClient.directions(request, function(err,response){
+				// console.log("inside directions callback" , err ,response)
 				if(err){console.log("ERRRRRRRR", err);throw err;}
-				console.log(response)
+				// console.log(response)
 				if(response.status == 200 && response.json.status == "OK")
-					callback2(response.json)
+					return callback2(response.json)
 			})
 
 			function callback2(r) {
-				console.log('++++++ trip fare callback2 ++++', r)
+				// console.log('++++++ trip fare callback2 ++++', r)
 				if(r){
 				// console.log('milefare', r.routes[0].legs[0])
 				var distance = r.routes[0].legs[0].distance;
 				var duration = r.routes[0].legs[0].duration;
 				var fare = Math.round(base_fare + (distance.value/1000)*per_km_fare);
-				console.log(fare)
-				callback(duration.text.match(/\d+/), fare, r.routes[0])
+				// console.log(fare)
+				return callback(duration.text.match(/\d+/), fare, r.routes[0])
 				}
 			}
 		}
@@ -340,15 +344,15 @@ let per_km_fare = 13;
 				alternatives: true,
 				mode: "transit"
 			};
-		console.log('++++++ metro fare ++++')
+		// console.log('++++++ metro fare ++++')
 		return gMapsClient.directions(request, function(e,r){
-			console.log("inside directions callback" , e ,r)
+			// console.log("inside directions callback" , e ,r)
 			if(e){console.log("ERRRRRRRR", e);throw e;}
 			if(r.status == 200 && r.json.status == "OK")
-				callback2(r.json)
+				return callback2(r.json)
 		})
 		function callback2(r){
-			console.log('transit fastest routes', r);	
+			// console.log('transit fastest routes', r);	
 			if(r){
 				
 				var route = findRoute(0, r.routes);
@@ -357,7 +361,7 @@ let per_km_fare = 13;
 				}else{
 					console.log("finding fare failed")
 				}
-				callback(route);
+				return callback(route);
 			}
 		}
 }
@@ -372,4 +376,10 @@ function findRoute(i, routes){
 		return (routes[i]);
 	}
 	return this.findRoute(++i,routes);
+}
+
+
+Date.prototype.addHours = function(h) {    
+   this.setTime(this.getTime() + (h*60*60*1000)); 
+   return this;   
 }
