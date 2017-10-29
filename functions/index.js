@@ -49,7 +49,29 @@ exports.updateJourney = functions.firestore
 
 	});
 
+
+
+
+
+// const rtdb = admin.database();
+// const firestore = admin.firestore();
+
 // const calculateRideToDemandRatio = require("./rideQuants")
 // exports.rideRatios = functions.https.onRequest((req, res) => {
 // 	rideRatios.handler(req, res, database, firestore);
 // });
+
+
+
+// const writeSurvey = require("./writeSurvey")
+var db = admin.firestore();
+const bodyParse = require('body-parser');
+exports.pilot = functions.https.onRequest((req, res) => {
+	console.log(bodyParse.toString((req.body)));
+
+	db.collection('survey').add(req.body).then(ref=> {
+		console.log(ref.id);
+	});
+	res.status(200, "added");
+	return "ABC"
+});
