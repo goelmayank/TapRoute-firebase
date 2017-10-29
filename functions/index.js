@@ -76,3 +76,37 @@ exports.pilot = functions.https.onRequest((req, res) => {
 		res.json({rsult: 'Survey with ID: ${ref.id} add'});
 	});
 });
+
+const nodemailer = require('nodemailer');
+const mailTransport = nodemailer.createTransport({
+	host: 'smtpout.gmail.com',
+	port: 465,
+	secure: true,
+	auth:{
+		email: 'teamtaproute@gmail.com',
+		pass: 'L00pm0bility'
+	}
+});
+
+
+exports.surveymail = functions.firestore.document('subway/{documentId}').onCreate((event) => {
+	var userData ={
+		name: event.data.get('name'),
+		email : event.data.get('email'),
+		phno : event.data.get('phno'),
+		otp : Math.floor(Math.random()*8999 + 1000),
+		freeRides: 3
+	}
+	db.collection('sregister').add(userData).then(ref =>{
+		console.log("Survey Data Saved");
+		const mailOption = {
+			form: '"Team TapRoute" <teamtaproute@gmail.com>',
+			to: userData.email,
+			subject: "Thanks for participating in our Survey",
+			text:'Your OTP: ${userData.otp}\nThanks a lot for your time in filling up our survey. We know personal data is precious, we promise to take good care of it.\nAs a token of appreciation and goodwill please use the OTP to avail three free rides.'
+		}
+		mailTransport.sendMail(mailOption);
+		return ref.id;
+	});
+	return event.eventId;
+});
