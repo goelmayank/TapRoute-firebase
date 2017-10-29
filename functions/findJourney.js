@@ -10,208 +10,112 @@ var gMapsClient = require('@google/maps').createClient(
 let base_fare = 25;
 let per_km_fare = 13;
 
-// exports.metroSearch = function({origin,destination},callback){
-// 	var self = {};
-// 	Promise.all([
-// 		(getNearbyMetro(origin.location, self)),
-// 		(getNearbyMetro(destination.location, self))
-// 		]).then(results => {
-// 			self.first_mile_metro_details = results[0];
-// 			self.last_mile_metro_details = results[1];
+exports.metroSearch = function({origin, destination} = {}, callback){
+	self = {};
+	self.origin = origin;
+	self.destination = destination;
 
-// 			// Hardcoded Google Places ID for Baiyappanhalli Metro Station
-// 			if (self.first_mile_metro_details.id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
-// 				self.mode_active = 'FIRST_MILE'
-// 			}
-// 			if (self.last_mile_metro_details.id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
-// 				self.mode_active = 'LAST_MILE'
-// 			}
-
-// 			tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat(), lng: self.first_mile_metro_details.geometry.location.lng()}, new Date().getTime()/1000, function(duration, fare, route){
-
-// 				self.first_mile_solo_fare = fare;
-// 				self.first_mile_share_fare = Math.trunc(fare*0.6);
-
-// 				self.first_mile_duration = duration;
-// 				self.total_time += parseInt(duration)
-
-// 				self.total_solo_fare += self.first_mile_solo_fare;
-// 				self.total_share_fare += self.first_mile_share_fare;
-
-// 				self.origin_end_time = addSeconds(self.origin_start_time, route.legs[0].duration.value);
-
-// 				metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, "&departure_time="+ Math.floor(self.origin_end_time.getTime()/1000), function(route){
-
-
-// 					var next = (new Date()).getTime();
-
-
-// 					if(route){
-// 						self.metro_fare = route.fare.value;
-// 						self.total_solo_fare += self.metro_fare;
-// 						self.total_share_fare += self.metro_fare;
-
-// 						self.transit_end_time = addSeconds(self.origin_end_time, route.legs[0].duration.value);
-// 						next = Math.floor(self.transit_end_time.getTime()/1000);
-
-// 						self.transit_duration = route.legs[0].duration.text;
-// 						self.transit_duration_number = self.transit_duration.split(' ')[0];
-// 						self.transit_duration_text = self.transit_duration.split(' ')[1];
-
-// 						self.total_time += parseInt(self.transit_duration.split(' ')[0]);
-
-// 						self.transit_info = route.legs[0].steps;
-// 						var lines = [];
-// 						for(var i in self.transit_info){
-// 							if(self.transit_info[i].travel_mode == "TRANSIT"){
-// 								lines.push(self.transit_info[i].transit_details.line.short_name);
-// 								self.transit_stops += self.transit_info[i].transit_details.num_stops;
-// 							}
-// 						}
-// 						self.transit_lines_text = lines.join(" > ");
-// 						self.transit_first_line = lines[0];
-// 						if(lines[1])
-// 							self.transit_second_line = lines[1];
-
-// 						if(self.transit_end_time.getMinutes() < 10)
-// 							self.transit_end_time_text = self.transit_end_time.getHours() +":0" + self.transit_end_time.getMinutes()
-// 						else
-// 							self.transit_end_time_text = self.transit_end_time.getHours() +":" + self.transit_end_time.getMinutes()
-// 					}
-
-// 					tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat(), lng: self.last_mile_metro_details.geometry.location.lng()},"&departure_time="+ next, function(duration, fare, route){
-
-// 						self.last_mile_solo_fare = fare;
-// 						self.last_mile_share_fare = Math.trunc(fare*0.6);
-
-// 						self.total_solo_fare += self.last_mile_solo_fare;
-// 						self.total_share_fare += self.last_mile_share_fare;
-
-// 						self.last_mile_duration = duration;
-// 						self.total_time += parseInt(duration);
-// 						self.destination_end_time = addSeconds((self.transit_end_time || self.origin_end_time), route.legs[0].duration.value);
-// 						if(self.destination_end_time.getMinutes() < 10)
-// 							self.destination_end_time_text = self.destination_end_time.getHours() +":0" +self.destination_end_time.getMinutes()
-// 						else
-// 							self.destination_end_time_text = self.destination_end_time.getHours() +":" +self.destination_end_time.getMinutes()
-
-// 						callback(self);
-// 					});
-// 				});
-
-// 			});
-
-// 		}).catch(console.log)
-// 		}
-
-	    
-	    exports.metroSearch = function({origin, destination} = {}, callback){
-	    	self = {};
-	    	self.origin = origin;
-	    	self.destination = destination;
-
-			self.total_solo_fare = 0;
-			self.total_share_fare = 0;
-	    	self.transit_stops = 0;
-	    	self.total_time = 0;
-	    	self.mode_active = "";
-	    	return Promise.all([getNearbyMetro(origin.location), getNearbyMetro(destination.location)])
-	    	.then(results => {
-				self.first_mile_metro_details = results[0];
-				self.last_mile_metro_details = results[1];
+	self.total_solo_fare = 0;
+	self.total_share_fare = 0;
+	self.transit_stops = 0;
+	self.total_time = 0;
+	self.mile_active = "";
+	return Promise.all([getNearbyMetro(origin.location), getNearbyMetro(destination.location)])
+	.then(results => {
+		self.first_mile_metro_details = results[0];
+		self.last_mile_metro_details = results[1];
 
 				// Hardcoded Google Places ID for Baiyappanhalli Metro Station
 				if (self.first_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
-					self.mode_active = 'FIRST_MILE'
+					self.mile_active = 'FIRST_MILE'
 				}
 				if (self.last_mile_metro_details.place_id === '1eadd44c245f7e14adbd0a4379465fa1d096a1d7') {
-					self.mode_active = 'LAST_MILE'
+					self.mile_active = 'LAST_MILE'
 				}
 				console.log('location first mile metro', results[1].geometry.location, results[0].geometry.location);
+				callback(self);
 				self.origin_start_time = new Date()
 				return tripFare(origin.location,{lat: self.first_mile_metro_details.geometry.location.lat, lng: self.first_mile_metro_details.geometry.location.lng},Math.floor(self.origin_start_time.getTime()/1000) , function(duration, fare,  route){
 					// console.log('===============Inside tripfare callback ==========');
-					try {
-						self.first_mile_solo_fare = fare;
-						self.first_mile_share_fare = Math.trunc(fare*0.6);
+					
+					self.first_mile_solo_fare = fare;
+					self.first_mile_share_fare = Math.trunc(fare*0.6);
 
-						self.first_mile_duration = duration;
-						self.total_time += parseInt(duration)
+					self.first_mile_duration = duration;
+					self.total_time += parseInt(duration)
 
-						self.total_solo_fare += self.first_mile_solo_fare;
-						self.total_share_fare += self.first_mile_share_fare;
+					self.total_solo_fare += self.first_mile_solo_fare;
+					self.total_share_fare += self.first_mile_share_fare;
 
-						self.origin_end_time = addSeconds(self.origin_start_time, route.legs[0].duration.value);
-
-						return metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, Math.floor(self.origin_end_time.getTime()/1000), function(route){
-							// console.log('>>>>>>>>> Inside metro callback <<<<<<<<<<< (yay :) )')
-
-
-							var next = (new Date()).getTime();
+					self.origin_end_time = addSeconds(self.origin_start_time, route.legs[0].duration.value);
+					callback(self)
+					return metroFare(self.first_mile_metro_details.place_id, self.last_mile_metro_details.place_id, Math.floor(self.origin_end_time.getTime()/1000), function(route){
+						// console.log('>>>>>>>>> Inside metro callback <<<<<<<<<<< (yay :) )')
 
 
-							if(route){
-								self.metro_fare = route.fare.value;
-								self.total_solo_fare += self.metro_fare;
-								self.total_share_fare += self.metro_fare;
+						var next = (new Date()).getTime();
 
-								self.transit_end_time = addSeconds(self.origin_end_time, route.legs[0].duration.value);
-								next = Math.floor(self.transit_end_time.getTime()/1000);
 
-								self.transit_duration = route.legs[0].duration.text;
-								self.transit_duration_number = self.transit_duration.split(' ')[0];
-								self.transit_duration_text = self.transit_duration.split(' ')[1];
+						if(route){
+							self.metro_fare = route.fare.value;
+							self.total_solo_fare += self.metro_fare;
+							self.total_share_fare += self.metro_fare;
 
-								self.total_time += parseInt(self.transit_duration.split(' ')[0]);
+							self.transit_end_time = addSeconds(self.origin_end_time, route.legs[0].duration.value);
+							next = Math.floor(self.transit_end_time.getTime()/1000);
 
-								self.transit_info = route.legs[0].steps;
-								var lines = [];
+							self.transit_duration = route.legs[0].duration.text;
+							self.transit_duration_number = self.transit_duration.split(' ')[0];
+							self.transit_duration_text = self.transit_duration.split(' ')[1];
 
-								for(var i in self.transit_info){
-									if(self.transit_info[i].travel_mode == "TRANSIT"){
-										lines.push(self.transit_info[i].transit_details.line.short_name);
-										self.transit_stops += self.transit_info[i].transit_details.num_stops;
-										// console.log('>> transit_stops', self.transit_stops);
-									}
+							self.total_time += parseInt(self.transit_duration.split(' ')[0]);
+
+							self.transit_info = route.legs[0].steps;
+							var lines = [];
+
+							for(var i in self.transit_info){
+								if(self.transit_info[i].travel_mode == "TRANSIT"){
+									lines.push(self.transit_info[i].transit_details.line.short_name);
+									self.transit_stops += self.transit_info[i].transit_details.num_stops;
+									// console.log('>> transit_stops', self.transit_stops);
 								}
-								self.transit_lines_text = lines.join(" > ");
-								self.transit_first_line = lines[0];
-								if(lines[1])
-									self.transit_second_line = lines[1];
-
-								if(self.transit_end_time.getMinutes() < 10)
-									self.transit_end_time_text = self.transit_end_time.getHours() +":0" + self.transit_end_time.getMinutes()
-								else
-									self.transit_end_time_text = self.transit_end_time.getHours() +":" + self.transit_end_time.getMinutes()
 							}
-							// console.log("dddddddddd  trip fare called dddddddddd");
-							return tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat, lng: self.last_mile_metro_details.geometry.location.lng},next, function(duration, fare, route){
+							self.transit_lines_text = lines.join(" > ");
+							self.transit_first_line = lines[0];
+							if(lines[1])
+								self.transit_second_line = lines[1];
 
-								self.last_mile_solo_fare = fare;
-								self.last_mile_share_fare = Math.trunc(fare*0.6);
+							if(self.transit_end_time.getMinutes() < 10)
+								self.transit_end_time_text = self.transit_end_time.getHours() +":0" + self.transit_end_time.getMinutes()
+							else
+								self.transit_end_time_text = self.transit_end_time.getHours() +":" + self.transit_end_time.getMinutes()
+						}
+						// console.log("dddddddddd  trip fare called dddddddddd");
+						callback(self)
+						return tripFare(self.destination.location,{lat: self.last_mile_metro_details.geometry.location.lat, lng: self.last_mile_metro_details.geometry.location.lng},next, function(duration, fare, route){
 
-								self.total_solo_fare += self.last_mile_solo_fare;
-								self.total_share_fare += self.last_mile_share_fare;
+							self.last_mile_solo_fare = fare;
+							self.last_mile_share_fare = Math.trunc(fare*0.6);
 
-								self.last_mile_duration = duration;
-								self.total_time += parseInt(duration);
-								self.destination_end_time = addSeconds((self.transit_end_time || self.origin_end_time), route.legs[0].duration.value);
-								if(self.destination_end_time.getMinutes() < 10)
-									self.destination_end_time_text = self.destination_end_time.getHours() +":0" +self.destination_end_time.getMinutes()
-								else
-									self.destination_end_time_text = self.destination_end_time.getHours() +":" +self.destination_end_time.getMinutes()
+							self.total_solo_fare += self.last_mile_solo_fare;
+							self.total_share_fare += self.last_mile_share_fare;
 
-								return callback(self);
-							});
-						});
-					}catch(e){
-						console.log('caught error', e, ' ==> throwing');
-						throw e;
-					}
-				})
+							self.last_mile_duration = duration;
+							self.total_time += parseInt(duration);
+							self.destination_end_time = addSeconds((self.transit_end_time || self.origin_end_time), route.legs[0].duration.value);
+							if(self.destination_end_time.getMinutes() < 10)
+								self.destination_end_time_text = self.destination_end_time.getHours() +":0" +self.destination_end_time.getMinutes()
+							else
+								self.destination_end_time_text = self.destination_end_time.getHours() +":" +self.destination_end_time.getMinutes()
 
-			}).catch(callback)
-	    }
+							return callback(self);
+						}).catch(callback(self));
+					}).catch(callback(self));
+					
+				}).catch(()=>callback(self))
+
+			}).catch(()=>callback(self))
+}
 
 	    /*******
 		*
@@ -223,7 +127,7 @@ let per_km_fare = 13;
 		* 	lng: <longitue>
 		* }
 		* 
-	    *******/
+		*******/
 
 	    /**********
 		*
@@ -241,7 +145,7 @@ let per_km_fare = 13;
 		* 
 		***********/
 
- 
+
 		function getNearbyMetro(position_latlong){
 			//console.log('getNearbyMetro for', position_latlong);
 
@@ -309,9 +213,9 @@ let per_km_fare = 13;
 				var fare = Math.round(base_fare + (distance.value/1000)*per_km_fare);
 				// console.log(fare)
 				return callback(duration.text.match(/\d+/), fare, r.routes[0])
-				}
 			}
 		}
+	}
 
 		/**********
 		*
@@ -338,12 +242,12 @@ let per_km_fare = 13;
 		function metroFare(id1, id2, dept, callback){
 		// console.log("metro fare called")
 		var request = {
-				origin: "place_id:"+id1,
-				destination: "place_id:"+id2,
-				departure_time: dept,
-				alternatives: true,
-				mode: "transit"
-			};
+			origin: "place_id:"+id1,
+			destination: "place_id:"+id2,
+			departure_time: dept,
+			alternatives: true,
+			mode: "transit"
+		};
 		// console.log('++++++ metro fare ++++')
 		return gMapsClient.directions(request, function(e,r){
 			// console.log("inside directions callback" , e ,r)
@@ -364,7 +268,7 @@ let per_km_fare = 13;
 				return callback(route);
 			}
 		}
-}
+	}
 
 // finds the fastest route with fare property
 function findRoute(i, routes){
@@ -380,6 +284,6 @@ function findRoute(i, routes){
 
 
 Date.prototype.addHours = function(h) {    
-   this.setTime(this.getTime() + (h*60*60*1000)); 
-   return this;   
+	this.setTime(this.getTime() + (h*60*60*1000)); 
+	return this;   
 }

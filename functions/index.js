@@ -16,28 +16,25 @@ exports.updateJourney = functions.firestore
 		return findJouneyModule.metroSearch({origin,destination},function(data){
 			console.log('inside callback :P ');
 			try{
-				var obj = {
-					message: "added",
-					first_mile_metro_details: data.first_mile_metro_details,
-					first_mile_duration: data.first_mile_duration,
-					first_mile_solo_fare: data.first_mile_solo_fare,
-					first_mile_share_fare: data.first_mile_share_fare,
+				var obj = Object.assign({message: "added"},data)
+				// first_mile_metro_details: data.first_mile_metro_details,
+				// 	first_mile_duration: data.first_mile_duration,
+				// 	first_mile_solo_fare: data.first_mile_solo_fare,
+				// 	first_mile_share_fare: data.first_mile_share_fare,
 					
-					transit_lines_text: data.transit_lines_text,
-					transit_stops: data.transit_stops,
-					transit_duration_number: data.transit_duration_number,
-					transit_duration_text: data.transit_duration_text,
-					metro_fare: data.metro_fare,
-					last_mile_metro_details: data.last_mile_metro_details,
-					last_mile_duration: data.last_mile_duration,
-					last_mile_solo_fare: data.last_mile_solo_fare,
-					last_mile_share_fare: data.last_mile_share_fare,
-					destination_end_time_text: data.destination_end_time_text,
-					total_solo_fare : data.total_solo_fare ,
-					total_share_fare : data.total_share_fare,
-					mode_active: data.mode_active,
-				}
-				
+				// 	transit_lines_text: data.transit_lines_text,
+				// 	transit_stops: data.transit_stops,
+				// 	transit_duration_number: data.transit_duration_number,
+				// 	transit_duration_text: data.transit_duration_text,
+				// 	metro_fare: data.metro_fare,
+				// 	last_mile_metro_details: data.last_mile_metro_details,
+				// 	last_mile_duration: data.last_mile_duration,
+				// 	last_mile_solo_fare: data.last_mile_solo_fare,
+				// 	last_mile_share_fare: data.last_mile_share_fare,
+				// 	destination_end_time_text: data.destination_end_time_text,
+				// 	total_solo_fare : data.total_solo_fare ,
+				// 	total_share_fare : data.total_share_fare,
+				// 	mode_active: data.mode_active,
 				
 				event.data.ref.set(obj, {merge: true});
 				
