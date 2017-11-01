@@ -94,7 +94,7 @@ var p = plivo.RestAPI({
   authToken: 'YmRhMThjYzBiNDY3MjNhMGViZWFjYTdmNDc4ZjJl'
 });
 
-exports.surveymail = functions.firestore.document('beta_users_survey/{documentId}').onCreate((event) => {
+exports.surveymail = functions.firestore.document('beta-users-survey/{documentId}').onCreate((event) => {
 	var userData ={
 		name: event.data.get('name'),
 		email : event.data.get('email'),
