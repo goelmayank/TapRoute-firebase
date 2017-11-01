@@ -67,15 +67,15 @@ exports.updateJourney = functions.firestore
 
 
 // const writeSurvey = require("./writeSurvey")
-var db = admin.firestore();
-const bodyParse = require('body-parser');
-exports.pilot = functions.https.onRequest((req, res) => {
-	console.log(bodyParse.toString((req.body)));
+// var db = admin.firestore();
+// const bodyParse = require('body-parser');
+// exports.pilot = functions.https.onRequest((req, res) => {
+// 	console.log(bodyParse.toString((req.body)));
 
-	db.collection('survey').add(req.body).then(ref=> {
-		res.json({rsult: 'Survey with ID: ${ref.id} add'});
-	});
-});
+// 	db.collection('survey').add(req.body).then(ref=> {
+// 		res.json({rsult: 'Survey with ID: ${ref.id} add'});
+// 	});
+// });
 
 const nodemailer = require('nodemailer');
 const mailTransport = nodemailer.createTransport({
@@ -88,16 +88,29 @@ const mailTransport = nodemailer.createTransport({
 	}
 });
 
+const plivo = require('plivo');
+var p = plivo.RestAPI({
+  authId: 'MANTNHZTC1Y2M3MWY0OT',
+  authToken: 'YmRhMThjYzBiNDY3MjNhMGViZWFjYTdmNDc4ZjJl'
+});
 
-exports.surveymail = functions.firestore.document('subway/{documentId}').onCreate((event) => {
+exports.surveymail = functions.firestore.document('beta_users_survey/{documentId}').onCreate((event) => {
 	var userData ={
 		name: event.data.get('name'),
 		email : event.data.get('email'),
-		phno : event.data.get('phno'),
+		phone : event.data.get('phone'),
 		otp : Math.floor(Math.random()*8999 + 1000),
 		freeRides: 3
 	}
-	db.collection('sregister').add(userData).then(ref =>{
+	var params = {
+		'dst' : userData.phone,
+		'text' : "Hi " +userData.name+", thank you for participating in TapRoute Survey. You can login to our pilot beta on http://taproute.io/rider"
+	};
+	p.send_message(params, function (status, response) {
+		console.log('Status: ', status);
+		console.log('API Response:\n', response);
+	});
+	db.collection('survey_register').add(userData).then(ref =>{
 		console.log("Survey Data Saved");
 		const mailOption = {
 			form: '"Team TapRoute" <teamtaproute@gmail.com>',
@@ -108,5 +121,6 @@ exports.surveymail = functions.firestore.document('subway/{documentId}').onCreat
 		mailTransport.sendMail(mailOption);
 		return ref.id;
 	});
+
 	return event.eventId;
 });
