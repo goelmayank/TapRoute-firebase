@@ -56,8 +56,8 @@ exports.updateJourney = functions.firestore
 
 
 
-// const rtdb = admin.database();
-// const firestore = admin.firestore();
+const rtdb = admin.database();
+const firestore = admin.firestore();
 
 // const calculateRideToDemandRatio = require("./rideQuants")
 // exports.rideRatios = functions.https.onRequest((req, res) => {
@@ -67,26 +67,8 @@ exports.updateJourney = functions.firestore
 
 
 // const writeSurvey = require("./writeSurvey")
-// var db = admin.firestore();
-// const bodyParse = require('body-parser');
-// exports.pilot = functions.https.onRequest((req, res) => {
-// 	console.log(bodyParse.toString((req.body)));
+var db = admin.firestore();
 
-// 	db.collection('survey').add(req.body).then(ref=> {
-// 		res.json({rsult: 'Survey with ID: ${ref.id} add'});
-// 	});
-// });
-
-const nodemailer = require('nodemailer');
-const mailTransport = nodemailer.createTransport({
-	host: 'smtpout.gmail.com',
-	port: 465,
-	secure: true,
-	auth:{
-		email: 'teamtaproute@gmail.com',
-		pass: 'L00pm0bility'
-	}
-});
 
 const plivo = require('plivo');
 var p = plivo.RestAPI({
@@ -102,7 +84,9 @@ exports.surveymail = functions.firestore.document('beta-users-survey/{documentId
 		otp : Math.floor(Math.random()*8999 + 1000),
 		freeRides: 3
 	}
+
 	var params = {
+		'src': '+917905902397',
 		'dst' : userData.phone,
 		'text' : "Hi " +userData.name+", thank you for participating in TapRoute Survey. You can login to our pilot beta on http://taproute.io/rider"
 	};
@@ -110,15 +94,10 @@ exports.surveymail = functions.firestore.document('beta-users-survey/{documentId
 		console.log('Status: ', status);
 		console.log('API Response:\n', response);
 	});
+
+	
 	db.collection('survey_register').add(userData).then(ref =>{
 		console.log("Survey Data Saved");
-		const mailOption = {
-			form: '"Team TapRoute" <teamtaproute@gmail.com>',
-			to: userData.email,
-			subject: "Thanks for participating in our Survey",
-			text:'Your OTP: ${userData.otp}\nThanks a lot for your time in filling up our survey. We know personal data is precious, we promise to take good care of it.\nAs a token of appreciation and goodwill please use the OTP to avail three free rides.'
-		}
-		mailTransport.sendMail(mailOption);
 		return ref.id;
 	});
 
