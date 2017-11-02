@@ -87,7 +87,7 @@ exports.surveymail = functions.firestore.document('beta-users-survey/{documentId
 
 	var params = {
 		'src': '+917905902397',
-		'dst' : userData.phone,
+		'dst' : '+91'+userData.phone,
 		'text' : "Hi " +userData.name+", thank you for participating in TapRoute Survey. You can login to our pilot beta on http://taproute.io/rider"
 	};
 	p.send_message(params, function (status, response) {
