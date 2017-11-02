@@ -94,7 +94,6 @@ exports.surveymail = functions.firestore.document('beta-users-survey/{documentId
 		console.log('Status: ', status);
 		console.log('API Response:\n', response);
 	});
-
 	
 	db.collection('survey_register').add(userData).then(ref =>{
 		console.log("Survey Data Saved");
