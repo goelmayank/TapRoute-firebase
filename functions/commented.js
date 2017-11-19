@@ -178,3 +178,52 @@
 // require("./findJourney").fullRide({origin: '12.9913, 77.6521', destination: '12.9719, 77.6412'}, function(res){
 // 	console.log('**********find_journey************\n', res)
 // });
+
+
+
+// const rtdb = admin.database();
+// const firestore = admin.firestore();
+
+// const calculateRideToDemandRatio = require("./rideQuants")
+// exports.rideRatios = functions.https.onRequest((req, res) => {
+// 	rideRatios.handler(req, res, database, firestore);
+// });
+
+
+
+// const writeSurvey = require("./writeSurvey")
+// var db = admin.firestore();
+
+
+// const plivo = require('plivo');
+// var p = plivo.RestAPI({
+//   authId: 'MANTNHZTC1Y2M3MWY0OT',
+//   authToken: 'YmRhMThjYzBiNDY3MjNhMGViZWFjYTdmNDc4ZjJl'
+// });
+
+// exports.surveymail = functions.firestore.document('beta-users-survey/{documentId}').onCreate((event) => {
+// 	var userData ={
+// 		name: event.data.get('name'),
+// 		email : event.data.get('email'),
+// 		phone : event.data.get('phone'),
+// 		otp : Math.floor(Math.random()*8999 + 1000),
+// 		freeRides: 3
+// 	}
+
+// 	var params = {
+// 		'src': 'TAPRTE',
+// 		'dst' : '+91'+userData.phone,
+// 		'text' : "Hi " +userData.name+", thank you for participating in TapRoute Survey. You can login to our pilot beta on http://taproute.io/rider"
+// 	};
+// 	p.send_message(params, function (status, response) {
+// 		console.log('Status: ', status);
+// 		console.log('API Response:\n', response);
+// 	});
+
+// 	db.collection('survey_register').add(userData).then(ref =>{
+// 		console.log("Survey Data Saved");
+// 		return ref.id;
+// 	});
+
+// 	return event.eventId;
+// });
