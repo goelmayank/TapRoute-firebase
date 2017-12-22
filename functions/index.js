@@ -56,9 +56,7 @@ exports.addOTP = functions.firestore
     });
 
     exports.qrAPI = functions.https.onRequest((req, res) => {
-      const qrCodeUrl = "https://s3.amazonaws.com/appforest_uf/f1479860625054x226974709657952200/Qr_2.png";
-      var data = req.body;
-      const id = data.id;
+      var qrCodeUrl = "https://s3.amazonaws.com/appforest_uf/f1479860625054x226974709657952200/Qr_2.png";
       try {
        qrCodeUrl = qrCodeModule.handler(req);
       } catch (e) {

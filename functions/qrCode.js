@@ -23,7 +23,7 @@
 }
 on receiving a RESTful request on the api endpoint /qrcode with a request body in following format
 {
-    "qrcode":"link_of_png"
+    png_file
 }
 */
 
