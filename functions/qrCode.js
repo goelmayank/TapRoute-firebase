@@ -35,13 +35,14 @@ var qrCode = require('qrcode');
 /*========================================END HERE=================================================*/
 
 
-exports.handler = function (req, res, database, firestore) {
+exports.handler =  function(req){
 //===============================1. Store DATA and fetch the document id=========================================
-/*check if qrcodes/type_a/<userID> doc exits . If it does , delete it.
-Then put the required data into qrinfo/type_a/<userID> doc.
-Firestore listens to this event and creates qrcodes/type_a/<userID>.
-The app listens to this doc and retrieves the value*/
+
     var data = req.body;
+    console.log("Inside handler, data: ", data);
+    //TODO : put the required data into qrinfo/type_a/<userID> doc.
+    // Firestore listens to this event and creates qrcodes/type_a/<userID>.
+    // The app listens to this doc and retrieves the value
 
     var qrCode_id = "abc";
 
