@@ -5,6 +5,7 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 const findJouneyModule = require("./findJourney")
+const qrCodeModule = require("./qrCode")
 // export.updateJourney = functions.firestore
 //     .document('journey/{journeyId}')
 //     .onCreate((event) => {

@@ -30,7 +30,7 @@ on receiving a RESTful request on the api endpoint /qrcode with a request body i
 /*===============================1. REQUIRED LIBRARIES AND CONFIGURATIONS==========================*/
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-var QRCode = require('qrcode');
+var qrCode = require('qrcode');
 
 /*========================================END HERE=================================================*/
 
@@ -38,16 +38,18 @@ var QRCode = require('qrcode');
 exports.handler = function (req, res, database, firestore) {
 //===============================1. Store DATA and fetch the document id=========================================
     var data = req.body;
-    
-    var qrcode_id = "";
+
+    var qrCode_id = "abc";
 
 
 
 /*===============================2. create QR Code and return its image url======================================*/
   //The following snippet is to generate the qrcode with the the journey id encrypted on it
-  QRCode.toDataURL(qrcode_id, function (err, url) {
-    console.log(url)
+  return qrCode.toDataURL(qrCode_id, function (err, url) {
+    console.log(url);
+    return url;
   })
+
 }
 
 /*======================================ENDS HERE==================================================*/
