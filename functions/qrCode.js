@@ -39,12 +39,21 @@ exports.handler =  function(req){
 //===============================1. Store DATA and fetch the document id=========================================
 
     var data = req.body;
+    var qrCode_id = "";
     console.log("Inside handler, data: ", data);
     //TODO : put the required data into qrinfo/type_a/<userID> doc.
     // Firestore listens to this event and creates qrcodes/type_a/<userID>.
     // The app listens to this doc and retrieves the value
 
-    var qrCode_id = "abc";
+    db.collection("qrCode").add(data)
+    .then(function(docRef) {
+        console.log("Document written with ID: ", docRef.id);
+        qrCode_id = docRef.id;
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+
 
 
 
