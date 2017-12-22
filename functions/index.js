@@ -54,3 +54,7 @@ exports.addOTP = functions.firestore
             console.log(e);
         }
     });
+
+    exports.qrAPI = functions.https.onRequest((req, res) => {
+      res.send({data: 'I am Mayank'});
+    });
