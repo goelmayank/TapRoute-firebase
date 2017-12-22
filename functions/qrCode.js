@@ -30,6 +30,7 @@ on receiving a RESTful request on the api endpoint /qrcode with a request body i
 /*===============================1. REQUIRED LIBRARIES AND CONFIGURATIONS==========================*/
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+var db = admin.firestore();
 var qrCode = require('qrcode');
 
 /*========================================END HERE=================================================*/
