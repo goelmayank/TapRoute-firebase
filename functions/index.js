@@ -6,6 +6,7 @@ admin.initializeApp(functions.config().firebase);
 var db = admin.firestore();
 const QRCode = require('qrcode');
 var request = require("request");
+var rp = require('request-promise');
 
 const findJouneyModule = require("./findJourney")
 
@@ -98,14 +99,30 @@ exports.addOTP = functions.firestore
       } catch (e) {
           console.log(e);
       }
-      request("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+doc_id, function(error, response, body) {
-        console.log("response : "+ response + " ,body : "+ body);
-        res.writeHead(200, {'Content-Type': 'image/jpeg'});
-        res.end(body);
-        // res.writeHead(200, {'Content-Type': 'text/html'});
-        // res.write('<html><body><img src="body:image/jpeg;base64,')
-        // res.write(Buffer.from(body).toString('base64'));
-        // res.end('"/></body></html>');
+      // request("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+doc_id, function(error, response, body) {
+
+      var options = {
+          uri: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+doc_id,
+          headers: {
+              'User-Agent': 'Request-Promise',
+              'Content-Type': 'application/json',
+          },
+          method: 'GET',
+          encoding : null,
+          resolveWithFullResponse: true,
+          rejectUnauthorized: false
+      };
+
+      rp(options).then(function (response) {
+    	   //console.log(response.headers);
+         //console.log("response : "+ response + " ,body : "+ body);
+         res.writeHead(200, {'Cpacth': 'kjdsb'});
+         res.end(response.body);
+      })
+      .catch(function (err) {
+          // API call failed...
+          res.status(401).send({error: 'Server error occured. Retry after some time'});
+
       });
 
     });
