@@ -3,9 +3,10 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
+var db = admin.firestore();
 
 const findJouneyModule = require("./findJourney")
-const qrCodeModule = require("./qrCode")
+const QRCode = require('qrcode');
 // export.updateJourney = functions.firestore
 //     .document('journey/{journeyId}')
 //     .onCreate((event) => {
@@ -56,11 +57,46 @@ exports.addOTP = functions.firestore
     });
 
     exports.qrAPI = functions.https.onRequest((req, res) => {
-      var qrCodeUrl = "https://s3.amazonaws.com/appforest_uf/f1479860625054x226974709657952200/Qr_2.png";
+      var doc_id = "13cfas554656hshg77887";
       try {
-       qrCodeUrl = qrCodeModule.handler(req);
+        var data = req.body;
+        // var obj = {
+        //     "userId":data.userId
+            // "origin":"Name",
+            // "destination":"Name",
+            // "less_walking":0/1,
+            // "first_mile":{
+            //     "mode":"bus/auto",
+            //     "fare":"bus/metro",
+            //     "start_time":"in_ms",
+            //     "end_time":"in_ms"
+            // },
+            // "transit":{
+            //     "num_changes":"bus/auto",
+            //     "num_stations":"bus/metro"
+            // },
+            // "last_mile":{
+            //     "mode":"bus/auto",
+            //     "fare":"bus/metro",
+            //     "start_time":"in_ms",
+            //     "end_time":"in_ms"
+            // }
+        // };
+        console.log("Inside handler, data: ", data);
+        //TODO : put the required data into qrinfo/type_a/<userID> doc.
+        // Firestore listens to this event and creates qrcodes/type_a/<userID>.
+        // The app listens to this doc and retrieves the value
+
+        db.collection("qrCode").add(data)
+        .then(function(docRef) {
+            console.log("Document written with ID: ", docRef.id);
+            doc_id = docRef.id;
+        })
+        .catch(function(error) {
+            console.error("Error adding document: ", error);
+        });
       } catch (e) {
           console.log(e);
       }
-      res.send(qrCodeUrl);
+      res.send({"qrCode_id": doc_id});
     });
