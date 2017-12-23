@@ -4,9 +4,11 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 var db = admin.firestore();
+const QRCode = require('qrcode');
+var request = require("request");
 
 const findJouneyModule = require("./findJourney")
-const QRCode = require('qrcode');
+
 // export.updateJourney = functions.firestore
 //     .document('journey/{journeyId}')
 //     .onCreate((event) => {
@@ -58,35 +60,32 @@ exports.addOTP = functions.firestore
 
     exports.qrAPI = functions.https.onRequest((req, res) => {
       var doc_id = "13cfas554656hshg77887";
+      console.log("req: " + req);
       try {
         var data = req.body;
         // var obj = {
-        //     "userId":data.userId
-            // "origin":"Name",
-            // "destination":"Name",
-            // "less_walking":0/1,
-            // "first_mile":{
-            //     "mode":"bus/auto",
-            //     "fare":"bus/metro",
-            //     "start_time":"in_ms",
-            //     "end_time":"in_ms"
-            // },
-            // "transit":{
-            //     "num_changes":"bus/auto",
-            //     "num_stations":"bus/metro"
-            // },
-            // "last_mile":{
-            //     "mode":"bus/auto",
-            //     "fare":"bus/metro",
-            //     "start_time":"in_ms",
-            //     "end_time":"in_ms"
-            // }
+        //   "userId": data.userId,
+        //   "origin": data.origin,
+        //   "destination":data.destination,
+        //   "less_walking":data.less_walking,
+        //   "first_mile":{
+        //       "mode":data.first_mile.mode,
+        //       "start_time":data.first_mile.start_time,
+        //       "end_time":data.first_mile.end_time
+        //     },
+        //   "transit":{
+        //       "num_changes":data.transit.num_changes,
+        //       "num_stations":data.transit.num_stations
+        //     },
+        //   "last_mile":{
+        //       "mode":data.last_mile.mode,
+        //       "fare":data.last_mile.fare,
+        //       "start_time":data.last_mile.start_time,
+        //       "end_time":data.last_mile.end_time
+        //     }
         // };
-        console.log("Inside handler, data: ", data);
-        //TODO : put the required data into qrinfo/type_a/<userID> doc.
-        // Firestore listens to this event and creates qrcodes/type_a/<userID>.
-        // The app listens to this doc and retrieves the value
 
+        console.log("Inside handler, data: ", data);
         db.collection("qrCode").add(data)
         .then(function(docRef) {
             console.log("Document written with ID: ", docRef.id);
@@ -98,5 +97,9 @@ exports.addOTP = functions.firestore
       } catch (e) {
           console.log(e);
       }
-      res.send({"qrCode_id": doc_id});
+      request("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+doc_id, function(error, response, body) {
+        console.log("response : "+ response + "body : "+ body);
+        res.send(response);
+      });
+
     });
