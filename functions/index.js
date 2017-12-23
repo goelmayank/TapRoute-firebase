@@ -101,7 +101,7 @@ exports.addOTP = functions.firestore
       request("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+doc_id, function(error, response, body) {
         console.log("response : "+ response + " ,body : "+ body);
         res.writeHead(200, {'Content-Type': 'image/jpeg'});
-        res.send(body);
+        res.end(body);
         // res.writeHead(200, {'Content-Type': 'text/html'});
         // res.write('<html><body><img src="body:image/jpeg;base64,')
         // res.write(Buffer.from(body).toString('base64'));
