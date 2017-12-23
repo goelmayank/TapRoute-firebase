@@ -90,6 +90,7 @@ exports.addOTP = functions.firestore
         .then(function(docRef) {
             console.log("Document written with ID: ", docRef.id);
             doc_id = docRef.id;
+            console.log("doc_id :" + doc_id)
         })
         .catch(function(error) {
             console.error("Error adding document: ", error);
@@ -99,7 +100,7 @@ exports.addOTP = functions.firestore
       }
       request("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+doc_id, function(error, response, body) {
         console.log("response : "+ response + " ,body : "+ body);
-        res.send(body);
+        res.writeHead(200, {'Content-Type': 'image/jpeg'}).send(body);
       });
 
     });
