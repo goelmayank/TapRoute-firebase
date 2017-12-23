@@ -62,7 +62,7 @@ exports.addOTP = functions.firestore
       var doc_id = "13cfas554656hshg77887";
       console.log("req: " + req);
       try {
-        var data = req.body;
+        var data = req.query;
         // var obj = {
         //   "userId": data.userId,
         //   "origin": data.origin,
@@ -98,8 +98,8 @@ exports.addOTP = functions.firestore
           console.log(e);
       }
       request("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+doc_id, function(error, response, body) {
-        console.log("response : "+ response + "body : "+ body);
-        res.send(response);
+        console.log("response : "+ response + " ,body : "+ body);
+        res.send(body);
       });
 
     });
