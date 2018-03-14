@@ -227,3 +227,71 @@
 
 // 	return event.eventId;
 // });
+
+// exports.addGeofence = functions.firestore
+  // .document('geofence/{geofenceId}')
+  // .onCreate((event) => {
+  //   const data = event.data.data();
+  //   const xCord = data.xCord;
+  //   const yCord = data.yCord;
+  //   const name = data.name;
+  //   try {
+  //
+  //       var obj = Object.assign({
+  //           xCord: xCord,
+  //           yCord: yCord,
+  //           name: name
+  //       }, data);
+  //
+  //
+  //       event.data.ref.set(obj, {
+  //           merge: true
+  //       });
+  //
+  //   } catch (e) {
+  //       console.log(e);
+  //   }
+  // })
+
+  // exports.qrAPI = functions.https.onRequest((req, res) => {
+  //       var doc_id = "13cfas554656hshg77887";
+  //       console.log("req: " + req);
+  //       try {
+  //         var data = req.query;
+  //         console.log("Inside handler, data: ", data);
+  //         db.collection("journey").add(data)
+  //         .then(function(docRef) {
+  //             console.log("Document written with ID: ", docRef.id);
+  //             doc_id = docRef.id;
+  //             console.log("doc_id :" + doc_id)
+  //             var options = {
+  //                 uri: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+doc_id,
+  //                 headers: {
+  //                     'User-Agent': 'Request-Promise',
+  //                     'Content-Type': 'application/json',
+  //                 },
+  //                 method: 'GET',
+  //                 encoding : null,
+  //                 resolveWithFullResponse: true,
+  //                 rejectUnauthorized: false
+  //             };
+  //
+  //             rp(options).then(function (response) {
+  //                res.writeHead(200, {'Cpacth': 'kjdsb'});
+  //                res.end(response.body);
+  //             })
+  //             .catch(function (err) {
+  //                 // API call failed...
+  //                 res.status(401).send({error: 'Server error occured. Retry after some time'});
+  //
+  //             });
+  //         })
+  //         .catch(function(error) {
+  //             console.error("Error adding document: ", error);
+  //             res.status(401).send({error: 'Server error occured. Retry after some time'});
+  //         });
+  //       } catch (e) {
+  //           console.log(e);
+  //           res.status(401).send({error: 'Server error occured. Retry after some time'});
+  //       }
+  //     });

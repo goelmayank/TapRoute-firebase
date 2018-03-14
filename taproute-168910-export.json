@@ -1,0 +1,166 @@
+{
+  "busStops" : {
+      "764" : [ {
+        "Latitude" : 28.5472865,
+        "Longitude" : 77.2518323,
+        "Stop" : "Nehru Place Terminal"
+      }, {
+        "Latitude" : 28.5476282,
+        "Longitude" : 77.245032,
+        "Stop" : "Pamposh Enclave"
+      }, {
+        "Latitude" : 28.5434827,
+        "Longitude" : 77.2398785,
+        "Stop" : "OS Communication"
+      }, {
+        "Latitude" : 28.5413419,
+        "Longitude" : 77.2353992,
+        "Stop" : "Savitri Cinema"
+      }, {
+        "Latitude" : 28.5413419,
+        "Longitude" : 77.2353992,
+        "Stop" : "Masjid Moth"
+      }, {
+        "Latitude" : 28.5416968,
+        "Longitude" : 77.2266069,
+        "Stop" : "Chirag Dilli"
+      }, {
+        "Latitude" : 28.5416968,
+        "Longitude" : 77.2266069,
+        "Stop" : "Swami Nagar"
+      }, {
+        "Latitude" : 28.5414882,
+        "Longitude" : 77.2162989,
+        "Stop" : "North Point Nursing home"
+      }, {
+        "Latitude" : 28.5420628,
+        "Longitude" : 77.2178473,
+        "Stop" : "Sadhna Enclave"
+      }, {
+        "Latitude" : 28.5429432,
+        "Longitude" : 77.2113131,
+        "Stop" : "Panchsheel Enclave"
+      }, {
+        "Latitude" : 28.5436102,
+        "Longitude" : 77.2045987,
+        "Stop" : "Hauz Khas Terminal"
+      }, {
+        "Latitude" : 28.5459547,
+        "Longitude" : 77.1941355,
+        "Stop" : "IIT  Gate"
+      }, {
+        "Latitude" : 28.5477117,
+        "Longitude" : 77.1900653,
+        "Stop" : "Jia Sarai"
+      }, {
+        "Latitude" : 28.5494437,
+        "Longitude" : 77.185313,
+        "Stop" : "IIT Hostel"
+      }, {
+        "Latitude" : 28.5518894,
+        "Longitude" : 77.1810236,
+        "Stop" : "ISTM"
+      }, {
+        "Latitude" : 28.5538796,
+        "Longitude" : 77.1788668,
+        "Stop" : "DDA Flats Munirka/Family Planning"
+      }, {
+        "Latitude" : 28.555209,
+        "Longitude" : 77.176962,
+        "Stop" : "(2)DDA Flats Munirka"
+      }, {
+        "Latitude" : 28.5565924,
+        "Longitude" : 77.1741937,
+        "Stop" : "Munirka/ FPAOI"
+      }, {
+        "Latitude" : 28.5572717,
+        "Longitude" : 77.1733682,
+        "Stop" : "Munirka Bus Stand"
+      }, {
+        "Latitude" : 28.5581113,
+        "Longitude" : 77.1720422,
+        "Stop" : "Vasant Vihar Depot"
+      }, {
+        "Latitude" : 28.5602386,
+        "Longitude" : 77.1699215,
+        "Stop" : "RK Puram Sector 5"
+      }, {
+        "Latitude" : 28.5624949,
+        "Longitude" : 77.1680926,
+        "Stop" : "Vasant Vihar"
+      }, {
+        "Latitude" : 28.5678162,
+        "Longitude" : 77.1643762,
+        "Stop" : "SM Temple"
+      }, {
+        "Latitude" : 28.5752927,
+        "Longitude" : 77.1582098,
+        "Stop" : "Basant Gaon"
+      }, {
+        "Latitude" : 28.5743199,
+        "Longitude" : 77.1523599,
+        "Stop" : "Arjun Path"
+      }, {
+        "Latitude" : 28.5752609,
+        "Longitude" : 77.1466445,
+        "Stop" : "Subroto Park"
+      }, {
+        "Latitude" : 28.5740384,
+        "Longitude" : 77.1423181,
+        "Stop" : "APS Colony"
+      } ]
+  },
+  "raw-locations" : {
+    "501" : [ {
+      "lat" : 28.5440151,
+      "lng" : 77.1964235,
+      "power" : 62,
+      "time" : 1519879402307
+    }, {
+      "lat" : 28.5441228,
+      "lng" : 77.1965011,
+      "power" : 24,
+      "time" : 1519836691630
+    }, {
+      "lat" : 28.5439532,
+      "lng" : 77.1964944,
+      "power" : 31,
+      "time" : 1519833855137
+    }, {
+      "lat" : 28.5442239,
+      "lng" : 77.1975793,
+      "power" : 31,
+      "time" : 1519833847763
+    }, {
+      "lat" : 28.5442239,
+      "lng" : 77.1975793,
+      "power" : 31,
+      "time" : 1519833842511
+    }, {
+      "lat" : 28.5441471,
+      "lng" : 77.19651,
+      "power" : 31,
+      "time" : 1519833836941
+    }, {
+      "lat" : 28.5441471,
+      "lng" : 77.19651,
+      "power" : 33,
+      "time" : 1519832699293
+    }, {
+      "lat" : 28.5441896,
+      "lng" : 77.1972199,
+      "power" : 33,
+      "time" : 1519832689231
+    }, {
+      "lat" : 28.5441896,
+      "lng" : 77.1972199,
+      "power" : 33,
+      "time" : 1519832679199
+    }, {
+      "lat" : 28.5441471,
+      "lng" : 77.19651,
+      "power" : 33,
+      "time" : 1519832667517
+    } ]
+  }
+}
