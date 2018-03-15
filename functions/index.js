@@ -8,6 +8,7 @@ const QRCode = require('qrcode');
 var request = require("request");
 var rp = require('request-promise');
 var hypertrack = require('hypertrack-node').hypertrack('sk_test_a7a8e1039f0f7aa1e18c08c439cf026650fe692b');
+var GeoJSON = require('geojson');
 
 function snapshotToArray(snapshot) {
     var returnArr = [];
@@ -16,21 +17,23 @@ function snapshotToArray(snapshot) {
         var item = childSnapshot.val();
         item.key = childSnapshot.key;
         try {
-
+          var data = [  { name: item.Stop, lat: item.Latitude, lng: item.Longitude } ];
+          GeoJSON.parse(data, {Point: ['lat', 'lng']});
+          console.log(data);
           hypertrack.places
-          .create({
-              "location": {
-                  "geojson": {
-                      "type": "Point",
-                      "coordinates": [
-                          item.Latitude, item.Longitude
-                      ]
-                  },
-              },
-              "name":item.Stop
-          }).then(function(place) {
-            console.log("Place of Stop "+ item.Stop + " is "+place.toString());
-          });
+            .create({
+                "location": {
+                    "geojson": {
+                        "type": "Point",
+                        "coordinates": [
+                            item.Longitude, item.Latitude
+                        ]
+                    },
+                },
+                "name":item.Stop
+            }).then(function(place) {
+              console.log("Place of Stop "+ item.Stop + " is "+place.toString());
+            });
 
         } catch (e){
           console.log(e);
