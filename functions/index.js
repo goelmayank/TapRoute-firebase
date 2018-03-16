@@ -17,9 +17,9 @@ function snapshotToArray(snapshot) {
         var item = childSnapshot.val();
         item.key = childSnapshot.key;
         try {
-          var data = [  { name: item.Stop, lat: item.Latitude, lng: item.Longitude } ];
-          GeoJSON.parse(data, {Point: ['lat', 'lng']});
-          console.log(data);
+          // var data = [  { name: item.Stop, lat: item.Latitude, lng: item.Longitude } ];
+          // GeoJSON.parse(data, {Point: ['lat', 'lng']});
+          // console.log(data);
           hypertrack.places
             .create({
                 "location": {
