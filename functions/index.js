@@ -6,7 +6,7 @@ admin.initializeApp(functions.config().firebase);
 var db = admin.firestore();
 const QRCode = require('qrcode');
 var rp = require('request-promise');
-var hypertrack = require('hypertrack-node').hypertrack('sk_test_a7a8e1039f0f7aa1e18c08c439cf026650fe692b');
+var hypertrack = require('hypertrack-node')('sk_test_a7a8e1039f0f7aa1e18c08c439cf026650fe692b');
 var GeoJSON = require('geojson');
 // import the module
 // var request = require('request');
