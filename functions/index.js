@@ -1,5 +1,3 @@
-import { lstat } from 'fs';
-
 'use strict';
 
 const functions = require('firebase-functions');
@@ -11,7 +9,7 @@ var rp = require('request-promise');
 var hypertrack = require('hypertrack-node').hypertrack('sk_test_a7a8e1039f0f7aa1e18c08c439cf026650fe692b');
 var GeoJSON = require('geojson');
 // import the module
-var request = require('request');
+// var request = require('request');
 
 function snapshotToArray(snapshot) {
     var returnArr = [];
@@ -86,31 +84,6 @@ exports.ActionsAllocationAPI = functions.https.onRequest((req, res) => {
 
 
     });
-
-
-
-//<!---------------------Trying Out RESTful calls from Firebase--------->
-
-
-
-// make the request
-var addressData = {
-    "address":"270 Linden Street",
-    "city": "San Francisco"
-}
-exports.createaddress = functions.https.onRequest((req, res) => {
-    console.log("Shubham")
-    request({
-    url: "https://api.hypertrack.com/api/v1/places/",
-    method: "POST",
-    json: true,   // <--Very important!!!
-    body: addressData
-}, function (error, response, body){
-    console.log(response);
-});
-});
-
-
 
 //<!--------------------------ignore------------------------------------>
 exports.qrAPI = functions.https.onRequest((req, res) => {
