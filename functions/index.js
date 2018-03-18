@@ -6,10 +6,7 @@ admin.initializeApp(functions.config().firebase);
 var db = admin.firestore();
 const QRCode = require('qrcode');
 var rp = require('request-promise');
-var hypertrack = require('hypertrack-node').hypertrack('sk_test_a7a8e1039f0f7aa1e18c08c439cf026650fe692b');
-var GeoJSON = require('geojson');
-// import the module
-// var request = require('request');
+var hypertrack = require('hypertrack-node').hypertrack('sk_test_d82656ada82f4b5c2133e1789328330721a47454');
 
 function snapshotToArray(snapshot) {
     var returnArr = [];
@@ -18,9 +15,6 @@ function snapshotToArray(snapshot) {
         var item = childSnapshot.val();
         item.key = childSnapshot.key;
         try {
-          // var data = [  { name: item.Stop, lat: item.Latitude, lng: item.Longitude } ];
-          // GeoJSON.parse(data, {Point: ['lat', 'lng']});
-          // console.log(data);
           hypertrack.places
             .create({
                 "location": {
