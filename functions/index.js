@@ -21,12 +21,12 @@ function snapshotToArray(snapshot) {
         item_x["location"]["type"] = 'Point'
         item_x["location"]["coordinates"] = []
         item_x["location"]["coordinates"].push(item.Latitude)
-        item_x["location"]["coordinates"].push(item.Longitude) 
+        item_x["location"]["coordinates"].push(item.Longitude)
         bodyArray.add(item_x)
         try {
         //   console.log("Name: "+item.Stop+" Latitude: " + item.Latitude + "Longitude: " + item.Longitude);
         console.log(item_x);
-          
+
           // hypertrack.places
           //   .create({
           //       "location": {
@@ -51,13 +51,13 @@ function snapshotToArray(snapshot) {
         returnArr.push(item);
     });
     console.log(bodyArray)
-    var retList = hypertrack.places.create(bodyArray).then(function(place) {
-        console.log("Successfully created test place: "+ place.toString());
+    hypertrack.places.create(bodyArray).then(function(place) {
+        console.log("Return List: "+retList)
         }, function(error) {
             console.log("Failed to create test place because "+ error);
         });
-    console.log("Return List: "+retList)
-    return retList;
+
+    return returnArr;
 };
 
 exports.ActionsAllocationAPI = functions.https.onRequest((req, res) => {
