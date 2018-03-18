@@ -10,21 +10,23 @@ var hypertrack = require('hypertrack-node').hypertrack('sk_test_d82656ada82f4b5c
 
 function snapshotToArray(snapshot) {
     var returnArr = [];
-
+    var bodyArray = [];
     snapshot.forEach(function(childSnapshot) {
+        var item_x = {}
         var item = childSnapshot.val();
         item.key = childSnapshot.key;
+        item_x["name"] = item.Stop
+        item_x["address"] = item.Stop
+        item_x["location"]["type"] = {}
+        item_x["location"]["type"] = 'Point'
+        item_x["location"]["coordinates"] = []
+        item_x["location"]["coordinates"].push(item.Latitude)
+        item_x["location"]["coordinates"].push(item.Longitude) 
+        bodyArray.add(item_x)
         try {
-          console.log("Name: "+item.Stop+" Latitude: " + item.Latitude + "Longitude: " + item.Longitude);
-          hypertrack.places
-          .create({
-              "address":item.Stop,
-              "city": "New Delhi"
-          }).then(function(place) {
-            console.log("Successfully created test place: "+ place.toString());
-          }, function(error) {
-            console.log("Failed to create test place because "+ error);
-          });
+        //   console.log("Name: "+item.Stop+" Latitude: " + item.Latitude + "Longitude: " + item.Longitude);
+        console.log(item_x);
+          
           // hypertrack.places
           //   .create({
           //       "location": {
@@ -48,8 +50,14 @@ function snapshotToArray(snapshot) {
         }
         returnArr.push(item);
     });
-
-    return returnArr;
+    console.log(bodyArray)
+    var retList = hypertrack.places.create(bodyArray).then(function(place) {
+        console.log("Successfully created test place: "+ place.toString());
+        }, function(error) {
+            console.log("Failed to create test place because "+ error);
+        });
+    console.log("Return List: "+retList)
+    return retList;
 };
 
 exports.ActionsAllocationAPI = functions.https.onRequest((req, res) => {
