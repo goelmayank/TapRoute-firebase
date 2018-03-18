@@ -48,7 +48,52 @@ function snapshotToArray(snapshot) {
         }
         returnArr.push(item);
     });
-
+    // var bodyArray = [];
+    // snapshot.forEach(function(childSnapshot) {
+    //     var item_x = {}
+    //     var item = childSnapshot.val();
+    //     item.key = childSnapshot.key;
+    //     item_x["name"] = item.Stop
+    //     item_x["address"] = item.Stop
+    //     item_x["location"]["type"] = {}
+    //     item_x["location"]["type"] = 'Point'
+    //     item_x["location"]["coordinates"] = []
+    //     item_x["location"]["coordinates"].push(item.Latitude)
+    //     item_x["location"]["coordinates"].push(item.Longitude)
+    //     bodyArray.add(item_x)
+    //     try {
+    //     //   console.log("Name: "+item.Stop+" Latitude: " + item.Latitude + "Longitude: " + item.Longitude);
+    //     console.log(item_x);
+    //
+    //       // hypertrack.places
+    //       //   .create({
+    //       //       "location": {
+    //       //           "geojson": {
+    //       //               "type": "Point",
+    //       //               "coordinates": [
+    //       //                   item.Longitude, item.Latitude
+    //       //               ]
+    //       //           },
+    //       //       },
+    //       //       "name":item.Stop
+    //       //   }).then(function(place) {
+    //       //     console.log("Successfully created place: "+ place);
+    //       //   }, function(error) {
+    //       //     console.log("Failed to create place because "+ error);
+    //       //   });
+    //
+    //     } catch (e){
+    //       console.log(e);
+    //       res.status(401).send({error: e.toString()});
+    //     }
+    //     returnArr.push(item);
+    // });
+    // console.log(bodyArray)
+    // hypertrack.places.create(bodyArray).then(function(place) {
+    //     console.log("Return List: "+retList)
+    //     }, function(error) {
+    //         console.log("Failed to create test place because "+ error);
+    //     });
     return returnArr;
 };
 
