@@ -15,20 +15,32 @@ function snapshotToArray(snapshot) {
         var item = childSnapshot.val();
         item.key = childSnapshot.key;
         try {
+          console.log("Name: "+item.Stop+" Latitude: " + item.Latitude + "Longitude: " + item.Longitude);
           hypertrack.places
-            .create({
-                "location": {
-                    "geojson": {
-                        "type": "Point",
-                        "coordinates": [
-                            item.Longitude, item.Latitude
-                        ]
-                    },
-                },
-                "name":item.Stop
-            }).then(function(place) {
-              console.log("Place of Stop "+ item.Stop + " is "+place.toString());
-            });
+          .create({
+              "address":item.Stop,
+              "city": "New Delhi"
+          }).then(function(place) {
+            console.log("Successfully created test place: "+ place.toString());
+          }, function(error) {
+            console.log("Failed to create test place because "+ error);
+          });
+          // hypertrack.places
+          //   .create({
+          //       "location": {
+          //           "geojson": {
+          //               "type": "Point",
+          //               "coordinates": [
+          //                   item.Longitude, item.Latitude
+          //               ]
+          //           },
+          //       },
+          //       "name":item.Stop
+          //   }).then(function(place) {
+          //     console.log("Successfully created place: "+ place);
+          //   }, function(error) {
+          //     console.log("Failed to create place because "+ error);
+          //   });
 
         } catch (e){
           console.log(e);
@@ -41,7 +53,6 @@ function snapshotToArray(snapshot) {
 };
 
 exports.ActionsAllocationAPI = functions.https.onRequest((req, res) => {
-      console.log("req: " + req);
       try {
         var data = req.query;
         console.log("Inside handler, data: ", data.userId);
@@ -49,7 +60,6 @@ exports.ActionsAllocationAPI = functions.https.onRequest((req, res) => {
         .then(function(snap) {
           try {
             res.status(200).json({posts: snap.val()});
-
             var stops=snapshotToArray(snap);
             console.log(stops);
 
