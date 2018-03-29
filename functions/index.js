@@ -13,27 +13,25 @@ var GeoJSON = require('geojson');
 
 function snapshotToArray(snapshot) {
     var returnArr = [];
-
+    console.log("in snapshots")
     snapshot.forEach(function(childSnapshot) {
         var item = childSnapshot.val();
-        item.key = childSnapshot.key;
         try {
           // var data = [  { name: item.Stop, lat: item.Latitude, lng: item.Longitude } ];
           // GeoJSON.parse(data, {Point: ['lat', 'lng']});
           // console.log(data);
           hypertrack.places
             .create({
+                "name":item.Stop,
                 "location": {
-                    "geojson": {
-                        "type": "Point",
-                        "coordinates": [
-                            item.Longitude, item.Latitude
-                        ]
-                    },
+                    "type": "Point",
+                    "coordinates": [
+                        item.Longitude, item.Latitude
+                    ]
                 },
-                "name":item.Stop
             }).then(function(place) {
-              console.log("Place of Stop "+ item.Stop + " is "+place.toString());
+              //place props: id,name,location,address,locality,landmark,zip_code,city,state,country,lookup_id,unique_id,display_text
+              console.log("Place of Stop "+ item.Stop + " is "+place.name + "," + place.address + "," + place.lookup_id + "," + place.unique_id);
             });
 
         } catch (e){
