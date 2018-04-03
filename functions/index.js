@@ -10,6 +10,27 @@ var hypertrack = require('hypertrack-node').hypertrack('sk_test_d82656ada82f4b5c
 var GeoJSON = require('geojson');
 // import the module
 // var request = require('request');
+var placeIds = [];
+
+function create_action(i){
+	if(!placeIds[i].isDefined)
+		return;
+	hypertrack.actions.create({
+								"user_id": userID,
+								"collection_id": busNumber,
+								"type": "stop",
+								"expected_place_id": placeIds[i],
+								"autocomplete_rule": {
+									 "type": "geofence",
+									 "place_label": "expected_place"
+								}
+							})
+			.then(function(action) {
+				console.log(action);
+				create_action(i+1);
+				//Actions are automatically assigned to user
+			});
+}
 
 function CreatePlacesAndActions(busStops, busNumber, userID) {
 		var returnArr = [];
@@ -17,22 +38,6 @@ function CreatePlacesAndActions(busStops, busNumber, userID) {
 		busStops.forEach(function(busStop) {
 				var updating = false;
 				var item = busStop.val();
-				var create_action = function(hypertrack_id){
-					hypertrack.actions.create({
-												"user_id": userID,
-												"collection_id": busNumber,
-												"type": "stop",
-												"expected_place_id": hypertrack_id,
-												"autocomplete_rule": {
-													 "type": "geofence",
-													 "place_label": "expected_place"
-												}
-											})
-							.then(function(action) {
-								console.log(action);
-								//Actions are automatically assigned to user
-							});
-				}
 				try {
 					var item_id = busNumber+"_"+busStop.key;
 					if(!item.hasOwnProperty("hypertrack_id") || item.hypertrack_id==0){
@@ -55,12 +60,14 @@ function CreatePlacesAndActions(busStops, busNumber, userID) {
 									"hypertrack_id": place.id,
 									"unique_id": place.unique_id
 								});
-								create_action(place.id);
+								placeIds.push(place.id);
 							});
 					}
 					i+=1;
-					if(!updating) 
-						create_action(item.hypertrack_id);
+					if(!updating)
+						placeIds.push(item.hypertrack_id);
+					if(i==numStops)
+						create_action(0);
 				} catch (e){
 					console.log(e);
 				}
