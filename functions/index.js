@@ -35,6 +35,7 @@ function create_action(i){
 function CreatePlacesAndActions(busStops, busNumber, userID) {
 		var returnArr = [];
 		var i=0;
+		var numStops=busStops.size();
 		busStops.forEach(function(busStop) {
 				var updating = false;
 				var item = busStop.val();
